@@ -316,12 +316,102 @@
       }
     }
 
-    /* Ícone do Admin */
-    .admin-icon {
+    /* Painel Admin */
+    .admin-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      z-index: 1000;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .admin-section {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: #f9f9f9;
+      border-radius: 8px;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .admin-table th, .admin-table td {
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .admin-table th {
+      background-color: #f2f2f2;
+    }
+
+    .admin-form input,
+    .admin-form select,
+    .admin-form textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .admin-btn {
+      padding: 0.5rem 1rem;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 0.5rem;
+    }
+
+    .btn-primary {
+      background-color: #ff5722;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+    }
+
+    .btn-success {
+      background-color: #28a745;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      flex: 1;
+    }
+
+    .admin-panel-btn {
       background-color: #2c3e50;
       padding: 0.3rem 0.5rem;
       border-radius: 4px;
-      display: none; /* Inicialmente escondido */
+      display: none;
     }
   </style>
 </head>
@@ -337,7 +427,7 @@
       <a href="#" onclick="mostrarPagina('login')" id="login-link">Entrar</a>
       <a href="#" onclick="mostrarPagina('carrinho')">🛒 Carrinho (<span id="carrinho-count">0</span>)</a>
       <a href="#" onclick="mostrarPagina('favoritos')">❤️ Favoritos (<span id="favoritos-count">0</span>)</a>
-      <a href="admin.html" class="admin-icon" id="admin-link">👑 Admin</a>
+      <a href="#" onclick="showAdminPanel()" class="admin-panel-btn" id="admin-link">👑 Admin</a>
     </nav>
   </header>
 
@@ -405,98 +495,227 @@
     </div>
   </main>
 
+  <!-- Painel Administrativo -->
+  <div id="adminPanel" class="admin-container">
+    <div class="admin-header">
+      <h1>Painel Administrativo</h1>
+      <button onclick="hideAdminPanel()" class="admin-btn btn-secondary">Voltar ao Site</button>
+    </div>
+
+    <div class="admin-section">
+      <h2>Gerenciar Produtos</h2>
+      <button onclick="showProductForm()" class="admin-btn btn-primary">Adicionar Produto</button>
+      
+      <div id="productForm" style="display: none; margin-top: 1rem;">
+        <form id="addProductForm" class="admin-form">
+          <input type="hidden" id="productId">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="productName">Nome do Produto</label>
+              <input type="text" id="productName" placeholder="Nome do Produto" required>
+            </div>
+            <div class="form-group">
+              <label for="productPrice">Preço (R$)</label>
+              <input type="number" step="0.01" id="productPrice" placeholder="Preço" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="productStock">Estoque</label>
+              <input type="number" id="productStock" placeholder="Estoque" required>
+            </div>
+            <div class="form-group">
+              <label for="productCategory">Categoria</label>
+              <select id="productCategory" required>
+                <option value="">Selecione...</option>
+                <option value="eletronicos">Eletrônicos</option>
+                <option value="roupas">Roupas</option>
+                <option value="casa">Casa e Cozinha</option>
+                <option value="beleza">Beleza</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="productDescription">Descrição</label>
+            <textarea id="productDescription" placeholder="Descrição do produto" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="productImage">URL da Imagem</label>
+            <input type="text" id="productImage" placeholder="https://exemplo.com/imagem.jpg" required>
+          </div>
+          <button type="submit" class="admin-btn btn-primary">Salvar</button>
+          <button type="button" onclick="hideProductForm()" class="admin-btn btn-secondary">Cancelar</button>
+        </form>
+      </div>
+
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Imagem</th>
+            <th>Nome</th>
+            <th>Preço</th>
+            <th>Estoque</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="productsTable">
+          <!-- Produtos serão carregados aqui -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="admin-section">
+      <h2>Pedidos</h2>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Data</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="ordersTable">
+          <!-- Pedidos serão carregados aqui -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="admin-section">
+      <h2>Cupons de Desconto</h2>
+      <button onclick="showCouponForm()" class="admin-btn btn-primary">Adicionar Cupom</button>
+      
+      <div id="couponForm" style="display: none; margin-top: 1rem;">
+        <form id="addCouponForm" class="admin-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="couponCode">Código</label>
+              <input type="text" id="couponCode" placeholder="Código do cupom" required>
+            </div>
+            <div class="form-group">
+              <label for="couponType">Tipo</label>
+              <select id="couponType" required>
+                <option value="percentage">Percentual</option>
+                <option value="fixed">Valor Fixo</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="couponValue">Valor</label>
+              <input type="number" step="0.01" id="couponValue" placeholder="Valor" required>
+            </div>
+            <div class="form-group">
+              <label for="couponExpiry">Data de Expiração</label>
+              <input type="date" id="couponExpiry" required>
+            </div>
+          </div>
+          <button type="submit" class="admin-btn btn-primary">Salvar</button>
+          <button type="button" onclick="hideCouponForm()" class="admin-btn btn-secondary">Cancelar</button>
+        </form>
+      </div>
+
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Tipo</th>
+            <th>Valor</th>
+            <th>Expiração</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="couponsTable">
+          <!-- Cupons serão carregados aqui -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <footer>
     <p>© 2023 Shopee Clone - Versão Simplificada</p>
   </footer>
 
   <script>
-    // Dados fictícios de produtos
-    const produtos = [
+    // Dados iniciais
+    let produtos = JSON.parse(localStorage.getItem('produtos')) || [
       { 
         id: 1, 
         nome: "Smartphone XYZ", 
         preco: 1999.99, 
         imagem: "https://via.placeholder.com/500", 
-        imagens: [
-          "https://via.placeholder.com/500",
-          "https://via.placeholder.com/500/333",
-          "https://via.placeholder.com/500/555"
-        ],
-        descricao: "Smartphone premium com tela AMOLED de 6.5 polegadas, câmera tripla de 48MP e bateria de 5000mAh.",
-        avaliacao: 4.5,
+        imagens: ["https://via.placeholder.com/500"],
+        descricao: "Smartphone premium com tela AMOLED de 6.5 polegadas",
         estoque: 10,
-        variacoes: ["128GB", "256GB", "512GB"]
+        categoria: "eletronicos",
+        vendas: 42,
+        avaliacao: 4.5
       },
       { 
         id: 2, 
         nome: "Notebook ABC", 
         preco: 3499.99, 
         imagem: "https://via.placeholder.com/500", 
-        imagens: [
-          "https://via.placeholder.com/500",
-          "https://via.placeholder.com/500/444",
-          "https://via.placeholder.com/500/666"
-        ],
-        descricao: "Notebook ultraleve com processador i7, 16GB RAM, SSD 512GB e tela Full HD de 15.6 polegadas.",
-        avaliacao: 4.2,
+        imagens: ["https://via.placeholder.com/500"],
+        descricao: "Notebook ultraleve com processador i7",
         estoque: 5,
-        variacoes: ["i5/8GB", "i7/16GB", "i9/32GB"]
-      },
-      { 
-        id: 3, 
-        nome: "Fone de Ouvido", 
-        preco: 199.99, 
-        imagem: "https://via.placeholder.com/500", 
-        imagens: [
-          "https://via.placeholder.com/500",
-          "https://via.placeholder.com/500/222",
-          "https://via.placeholder.com/500/777"
-        ],
-        descricao: "Fone de ouvido sem fio com cancelamento de ruído ativo e bateria de até 30 horas de duração.",
-        avaliacao: 4.7,
-        estoque: 20,
-        variacoes: ["Preto", "Branco", "Azul"]
-      },
-      { 
-        id: 4, 
-        nome: "Smartwatch", 
-        preco: 599.99, 
-        imagem: "https://via.placeholder.com/500", 
-        imagens: [
-          "https://via.placeholder.com/500",
-          "https://via.placeholder.com/500/111",
-          "https://via.placeholder.com/500/888"
-        ],
-        descricao: "Smartwatch com monitor de frequência cardíaca, GPS integrado e resistência à água até 50 metros.",
-        avaliacao: 4.3,
-        estoque: 8,
-        variacoes: ["Pequeno", "Médio", "Grande"]
+        categoria: "eletronicos",
+        vendas: 28,
+        avaliacao: 4.2
       }
     ];
 
-    // Usuário logado
+    let pedidos = JSON.parse(localStorage.getItem('pedidos')) || [
+      {
+        id: 1001,
+        cliente: "João Silva",
+        email: "joao@exemplo.com",
+        data: "2023-05-15",
+        itens: [
+          { id: 1, nome: "Smartphone XYZ", preco: 1999.99, quantidade: 1 }
+        ],
+        total: 1999.99,
+        status: "pendente"
+      }
+    ];
+
+    let cupons = JSON.parse(localStorage.getItem('cupons')) || [
+      {
+        codigo: "DESCONTO10",
+        tipo: "percentage",
+        valor: 10,
+        expiracao: "2023-12-31",
+        usos: 0
+      }
+    ];
+
     let usuarioLogado = null;
-    let produtoSelecionado = null;
 
     // Inicialização
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener('DOMContentLoaded', function() {
       carregarProdutos();
       atualizarContadores();
       
-      // Verificar se há usuário logado
-      const usuarioSalvo = localStorage.getItem("usuarioLogado");
+      const usuarioSalvo = localStorage.getItem('usuarioLogado');
       if (usuarioSalvo) {
         usuarioLogado = JSON.parse(usuarioSalvo);
         document.querySelector('#login-link').textContent = "Minha Conta";
         
-        // Mostrar ícone do admin se for o usuário admin
+        // Mostrar botão do admin se for o usuário admin
         if (usuarioLogado.email === "acdef0612@gmail.com") {
           document.getElementById('admin-link').style.display = "inline-block";
         }
       }
+      
+      // Configurar formulários do admin
+      document.getElementById('addProductForm').addEventListener('submit', salvarProduto);
+      document.getElementById('addCouponForm').addEventListener('submit', salvarCupom);
     });
 
-    // Função para mostrar páginas
+    // Funções do site
     function mostrarPagina(pagina) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById(pagina).classList.add('active');
@@ -510,142 +729,64 @@
       }
     }
 
-    function mostrarLogin() {
-      mostrarPagina('login');
-    }
-
-    function mostrarCadastro() {
-      mostrarPagina('cadastro');
+    function carregarProdutos() {
+      const container = document.getElementById('produtos-container');
+      container.innerHTML = produtos.map(produto => `
+        <div class="produto-card" onclick="mostrarProduto(${produto.id})">
+          <img src="${produto.imagem}" alt="${produto.nome}">
+          <h3>${produto.nome}</h3>
+          <p>R$ ${produto.preco.toFixed(2)}</p>
+          <div class="produto-avaliacao">
+            <span class="estrelas">${'★'.repeat(Math.round(produto.avaliacao))}${'☆'.repeat(5 - Math.round(produto.avaliacao))}</span>
+            <span>${produto.avaliacao.toFixed(1)}</span>
+          </div>
+          <button onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
+        </div>
+      `).join('');
     }
 
     function mostrarProduto(id) {
-      produtoSelecionado = produtos.find(p => p.id === id);
-      carregarProdutoDetalhado();
-      mostrarPagina('produto');
-    }
-
-    // Funções de produto
-    function carregarProdutos() {
-      const container = document.getElementById("produtos-container");
-      container.innerHTML = '';
+      const produto = produtos.find(p => p.id === id);
+      if (!produto) return;
       
-      produtos.forEach(produto => {
-        const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-        const isFavorito = favoritos.some(f => f.id === produto.id);
-        
-        container.innerHTML += `
-          <div class="produto-card" onclick="mostrarProduto(${produto.id})">
-            <img src="${produto.imagem}" alt="${produto.nome}">
-            <h3>${produto.nome}</h3>
-            <p>R$ ${produto.preco.toFixed(2)}</p>
-            <div class="produto-avaliacao">
-              <span class="estrelas">${'★'.repeat(Math.round(produto.avaliacao))}${'☆'.repeat(5 - Math.round(produto.avaliacao))}</span>
-              <span>${produto.avaliacao.toFixed(1)}</span>
-            </div>
-            <button onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
-            <button class="${isFavorito ? 'favorito' : ''}" onclick="event.stopPropagation(); toggleFavorito(${produto.id})">
-              ${isFavorito ? '❤️ Remover' : '❤️ Favoritar'}
-            </button>
-          </div>
-        `;
-      });
-    }
-
-    function carregarProdutoDetalhado() {
-      if (!produtoSelecionado) return;
-      
-      const container = document.getElementById("produto-container");
-      const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-      const isFavorito = favoritos.some(f => f.id === produtoSelecionado.id);
-      
-      // Gerar opções de variações
-      let opcoesVariacao = '';
-      produtoSelecionado.variacoes.forEach(variacao => {
-        opcoesVariacao += `<option value="${variacao}">${variacao}</option>`;
-      });
-      
-      // Gerar miniaturas
-      let miniaturas = '';
-      produtoSelecionado.imagens.forEach((img, index) => {
-        miniaturas += `<img class="miniatura" src="${img}" onclick="trocarImagemPrincipal('${img}')" alt="Miniatura ${index + 1}">`;
-      });
-      
+      const container = document.getElementById('produto-container');
       container.innerHTML = `
         <div class="produto-galeria">
-          <img id="imagem-principal" src="${produtoSelecionado.imagem}" alt="${produtoSelecionado.nome}">
+          <img src="${produto.imagem}" alt="${produto.nome}">
           <div class="miniaturas">
-            ${miniaturas}
+            ${produto.imagens.map(img => `<img class="miniatura" src="${img}" onclick="trocarImagemPrincipal(this.src)">`).join('')}
           </div>
         </div>
         <div class="produto-info">
-          <h1>${produtoSelecionado.nome}</h1>
+          <h1>${produto.nome}</h1>
           <div class="produto-avaliacao">
-            <span class="estrelas">${'★'.repeat(Math.round(produtoSelecionado.avaliacao))}${'☆'.repeat(5 - Math.round(produtoSelecionado.avaliacao))}</span>
-            <span>${produtoSelecionado.avaliacao.toFixed(1)} (${Math.floor(Math.random() * 100) + 50} avaliações)</span>
+            <span class="estrelas">${'★'.repeat(Math.round(produto.avaliacao))}${'☆'.repeat(5 - Math.round(produto.avaliacao))}</span>
+            <span>${produto.avaliacao.toFixed(1)} (${produto.vendas} vendas)</span>
           </div>
-          <div class="produto-preco">R$ ${produtoSelecionado.preco.toFixed(2)}</div>
+          <div class="produto-preco">R$ ${produto.preco.toFixed(2)}</div>
           <div class="produto-descricao">
-            <h3>Descrição do Produto</h3>
-            <p>${produtoSelecionado.descricao}</p>
+            <p>${produto.descricao}</p>
           </div>
           <div class="produto-opcoes">
-            <select id="variacao-produto">
-              ${opcoesVariacao}
+            <select>
+              <option>Selecione uma opção</option>
+              ${produto.variacoes ? produto.variacoes.map(v => `<option>${v}</option>`).join('') : ''}
             </select>
-            <span>Em estoque: ${produtoSelecionado.estoque} unidades</span>
           </div>
           <div class="produto-botoes">
-            <button class="btn-comprar" onclick="adicionarAoCarrinho(${produtoSelecionado.id}); mostrarPagina('carrinho')">Comprar agora</button>
-            <button class="btn-carrinho" onclick="adicionarAoCarrinho(${produtoSelecionado.id})">Adicionar ao carrinho</button>
-            <button class="btn-favorito" onclick="toggleFavorito(${produtoSelecionado.id})">
-              ${isFavorito ? '❤️ Remover dos favoritos' : '❤️ Adicionar aos favoritos'}
-            </button>
+            <button class="btn-comprar" onclick="adicionarAoCarrinho(${produto.id})">Comprar agora</button>
+            <button class="btn-carrinho" onclick="adicionarAoCarrinho(${produto.id})">Adicionar ao carrinho</button>
           </div>
         </div>
       `;
+      mostrarPagina('produto');
     }
 
     function trocarImagemPrincipal(src) {
-      document.getElementById("imagem-principal").src = src;
+      const mainImg = document.querySelector('.produto-galeria > img');
+      if (mainImg) mainImg.src = src;
     }
 
-    function buscarProdutos() {
-      const termo = document.getElementById("searchInput").value.toLowerCase();
-      const container = document.getElementById("produtos-container");
-      container.innerHTML = '';
-      
-      const produtosFiltrados = produtos.filter(produto => 
-        produto.nome.toLowerCase().includes(termo)
-      );
-      
-      if (produtosFiltrados.length === 0) {
-        container.innerHTML = '<p>Nenhum produto encontrado.</p>';
-        return;
-      }
-      
-      produtosFiltrados.forEach(produto => {
-        const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-        const isFavorito = favoritos.some(f => f.id === produto.id);
-        
-        container.innerHTML += `
-          <div class="produto-card" onclick="mostrarProduto(${produto.id})">
-            <img src="${produto.imagem}" alt="${produto.nome}">
-            <h3>${produto.nome}</h3>
-            <p>R$ ${produto.preco.toFixed(2)}</p>
-            <div class="produto-avaliacao">
-              <span class="estrelas">★★★★★</span>
-              <span>${produto.avaliacao.toFixed(1)}</span>
-            </div>
-            <button onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
-            <button class="${isFavorito ? 'favorito' : ''}" onclick="event.stopPropagation(); toggleFavorito(${produto.id})">
-              ${isFavorito ? '❤️ Remover' : '❤️ Favoritar'}
-            </button>
-          </div>
-        `;
-      });
-    }
-
-    // Funções de carrinho
     function adicionarAoCarrinho(id) {
       if (!usuarioLogado) {
         alert("Por favor, faça login para adicionar itens ao carrinho.");
@@ -654,17 +795,17 @@
       }
       
       const produto = produtos.find(p => p.id === id);
-      let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+      let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
       carrinho.push(produto);
-      localStorage.setItem("carrinho", JSON.stringify(carrinho));
+      localStorage.setItem('carrinho', JSON.stringify(carrinho));
       atualizarContadores();
       alert(`${produto.nome} adicionado ao carrinho!`);
     }
 
     function carregarCarrinho() {
-      const container = document.getElementById("carrinho-itens");
-      const totalContainer = document.getElementById("carrinho-total");
-      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+      const container = document.getElementById('carrinho-itens');
+      const totalContainer = document.getElementById('carrinho-total');
+      const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
       
       container.innerHTML = '';
       
@@ -693,55 +834,51 @@
     }
 
     function removerDoCarrinho(index) {
-      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+      const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
       carrinho.splice(index, 1);
-      localStorage.setItem("carrinho", JSON.stringify(carrinho));
+      localStorage.setItem('carrinho', JSON.stringify(carrinho));
       carregarCarrinho();
       atualizarContadores();
     }
 
     function finalizarCompra() {
-      if (confirm("Deseja finalizar sua compra?")) {
-        localStorage.removeItem("carrinho");
-        carregarCarrinho();
-        atualizarContadores();
-        alert("Compra finalizada com sucesso! Obrigado.");
-        mostrarPagina('home');
-      }
-    }
-
-    // Funções de favoritos
-    function toggleFavorito(id) {
-      if (!usuarioLogado) {
-        alert("Por favor, faça login para favoritar produtos.");
-        mostrarPagina('login');
+      const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+      if (carrinho.length === 0) {
+        alert("Seu carrinho está vazio!");
         return;
       }
       
-      const produto = produtos.find(p => p.id === id);
-      let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+      // Criar novo pedido
+      const novoPedido = {
+        id: pedidos.length > 0 ? Math.max(...pedidos.map(p => p.id)) + 1 : 1001,
+        cliente: usuarioLogado.nome,
+        email: usuarioLogado.email,
+        data: new Date().toISOString().split('T')[0],
+        itens: carrinho.map(item => ({
+          id: item.id,
+          nome: item.nome,
+          preco: item.preco,
+          quantidade: 1
+        })),
+        total: carrinho.reduce((sum, item) => sum + item.preco, 0),
+        status: "pendente"
+      };
       
-      const index = favoritos.findIndex(f => f.id === id);
-      if (index >= 0) {
-        favoritos.splice(index, 1);
-        alert(`${produto.nome} removido dos favoritos!`);
-      } else {
-        favoritos.push(produto);
-        alert(`${produto.nome} adicionado aos favoritos!`);
-      }
+      pedidos.push(novoPedido);
+      localStorage.setItem('pedidos', JSON.stringify(pedidos));
       
-      localStorage.setItem("favoritos", JSON.stringify(favoritos));
-      if (produtoSelecionado && produtoSelecionado.id === id) {
-        carregarProdutoDetalhado();
-      }
-      carregarProdutos();
-      carregarFavoritos();
+      // Limpar carrinho
+      localStorage.removeItem('carrinho');
+      carregarCarrinho();
       atualizarContadores();
+      
+      alert("Pedido realizado com sucesso! Obrigado por sua compra.");
+      mostrarPagina('home');
     }
 
     function carregarFavoritos() {
-      const container = document.getElementById("favoritos-itens");
-      const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+      const container = document.getElementById('favoritos-itens');
+      const favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
       
       container.innerHTML = '';
       
@@ -750,34 +887,60 @@
         return;
       }
       
-      favoritos.forEach(produto => {
-        container.innerHTML += `
+      container.innerHTML = favoritos.map(id => {
+        const produto = produtos.find(p => p.id === id);
+        if (!produto) return '';
+        return `
           <div class="produto-card" onclick="mostrarProduto(${produto.id})">
             <img src="${produto.imagem}" alt="${produto.nome}">
             <h3>${produto.nome}</h3>
             <p>R$ ${produto.preco.toFixed(2)}</p>
-            <button onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
-            <button class="favorito" onclick="event.stopPropagation(); toggleFavorito(${produto.id})">❤️ Remover</button>
+            <button onclick="event.stopPropagation(); removerDosFavoritos(${produto.id})">❌ Remover</button>
           </div>
         `;
-      });
+      }).join('');
     }
 
-    // Funções de autenticação
+    function adicionarAosFavoritos(id) {
+      let favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
+      if (!favoritos.includes(id)) {
+        favoritos.push(id);
+        localStorage.setItem('favoritos', JSON.stringify(favoritos));
+        atualizarContadores();
+        alert("Produto adicionado aos favoritos!");
+      }
+    }
+
+    function removerDosFavoritos(id) {
+      let favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
+      favoritos = favoritos.filter(favId => favId !== id);
+      localStorage.setItem('favoritos', JSON.stringify(favoritos));
+      carregarFavoritos();
+      atualizarContadores();
+    }
+
+    function atualizarContadores() {
+      const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+      const favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
+      
+      document.getElementById('carrinho-count').textContent = carrinho.length;
+      document.getElementById('favoritos-count').textContent = favoritos.length;
+    }
+
     function fazerLogin(event) {
       event.preventDefault();
-      const email = document.getElementById("loginEmail").value;
-      const senha = document.getElementById("loginSenha").value;
+      const email = document.getElementById('loginEmail').value;
+      const senha = document.getElementById('loginSenha').value;
       
-      // Verificar se é o admin
+      // Verificar credenciais do admin
       if (email === "acdef0612@gmail.com" && senha === "mamutipa08") {
         usuarioLogado = {
-          email,
           nome: "Administrador",
+          email: email,
           isAdmin: true
         };
         
-        localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+        localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
         document.querySelector('#login-link').textContent = "Minha Conta";
         document.getElementById('admin-link').style.display = "inline-block";
         mostrarPagina('home');
@@ -785,14 +948,14 @@
         return;
       }
       
-      // Simulação de login para usuários normais
+      // Login normal (simulado)
       usuarioLogado = {
-        email,
         nome: email.split('@')[0],
+        email: email,
         isAdmin: false
       };
       
-      localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+      localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
       document.querySelector('#login-link').textContent = "Minha Conta";
       mostrarPagina('home');
       alert(`Bem-vindo, ${usuarioLogado.nome}!`);
@@ -800,30 +963,271 @@
 
     function fazerCadastro(event) {
       event.preventDefault();
-      const nome = document.getElementById("cadastroNome").value;
-      const email = document.getElementById("cadastroEmail").value;
-      const senha = document.getElementById("cadastroSenha").value;
+      const nome = document.getElementById('cadastroNome').value;
+      const email = document.getElementById('cadastroEmail').value;
+      const senha = document.getElementById('cadastroSenha').value;
       
-      // Simulação de cadastro
       usuarioLogado = {
-        email,
-        nome,
+        nome: nome,
+        email: email,
         isAdmin: false
       };
       
-      localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+      localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
       document.querySelector('#login-link').textContent = "Minha Conta";
       mostrarPagina('home');
       alert(`Cadastro realizado com sucesso, ${nome}!`);
     }
 
-    // Atualizar contadores
-    function atualizarContadores() {
-      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-      const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+    function mostrarLogin() {
+      mostrarPagina('login');
+    }
+
+    function mostrarCadastro() {
+      mostrarPagina('cadastro');
+    }
+
+    function buscarProdutos() {
+      const termo = document.getElementById('searchInput').value.toLowerCase();
+      const container = document.getElementById('produtos-container');
       
-      document.getElementById("carrinho-count").textContent = carrinho.length;
-      document.getElementById("favoritos-count").textContent = favoritos.length;
+      const resultados = produtos.filter(produto => 
+        produto.nome.toLowerCase().includes(termo) || 
+        produto.descricao.toLowerCase().includes(termo)
+      );
+      
+      if (resultados.length === 0) {
+        container.innerHTML = '<p>Nenhum produto encontrado.</p>';
+        return;
+      }
+      
+      container.innerHTML = resultados.map(produto => `
+        <div class="produto-card" onclick="mostrarProduto(${produto.id})">
+          <img src="${produto.imagem}" alt="${produto.nome}">
+          <h3>${produto.nome}</h3>
+          <p>R$ ${produto.preco.toFixed(2)}</p>
+          <button onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
+        </div>
+      `).join('');
+    }
+
+    // Funções do Painel Admin
+    function showAdminPanel() {
+      if (usuarioLogado && usuarioLogado.email === "acdef0612@gmail.com") {
+        document.getElementById('adminPanel').style.display = 'block';
+        carregarDadosAdmin();
+      } else {
+        alert("Acesso negado. Somente administradores podem acessar este painel.");
+      }
+    }
+
+    function hideAdminPanel() {
+      document.getElementById('adminPanel').style.display = 'none';
+    }
+
+    function carregarDadosAdmin() {
+      // Carregar produtos
+      const productsTable = document.getElementById('productsTable');
+      productsTable.innerHTML = produtos.map(produto => `
+        <tr>
+          <td>${produto.id}</td>
+          <td><img src="${produto.imagem}" alt="${produto.nome}" style="width: 50px; height: 50px;"></td>
+          <td>${produto.nome}</td>
+          <td>R$ ${produto.preco.toFixed(2)}</td>
+          <td>${produto.estoque}</td>
+          <td>
+            <button onclick="editarProduto(${produto.id})" class="admin-btn btn-primary">Editar</button>
+            <button onclick="excluirProduto(${produto.id})" class="admin-btn btn-danger">Excluir</button>
+          </td>
+        </tr>
+      `).join('');
+      
+      // Carregar pedidos
+      const ordersTable = document.getElementById('ordersTable');
+      ordersTable.innerHTML = pedidos.map(pedido => `
+        <tr>
+          <td>${pedido.id}</td>
+          <td>${pedido.cliente}</td>
+          <td>${pedido.data}</td>
+          <td>R$ ${pedido.total.toFixed(2)}</td>
+          <td>${pedido.status}</td>
+          <td>
+            <button onclick="editarPedido(${pedido.id})" class="admin-btn btn-primary">Editar</button>
+          </td>
+        </tr>
+      `).join('');
+      
+      // Carregar cupons
+      const couponsTable = document.getElementById('couponsTable');
+      couponsTable.innerHTML = cupons.map(cupom => `
+        <tr>
+          <td>${cupom.codigo}</td>
+          <td>${cupom.tipo === 'percentage' ? 'Percentual' : 'Valor Fixo'}</td>
+          <td>${cupom.tipo === 'percentage' ? cupom.valor + '%' : 'R$ ' + cupom.valor.toFixed(2)}</td>
+          <td>${cupom.expiracao}</td>
+          <td>
+            <button onclick="editarCupom('${cupom.codigo}')" class="admin-btn btn-primary">Editar</button>
+            <button onclick="excluirCupom('${cupom.codigo}')" class="admin-btn btn-danger">Excluir</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function showProductForm() {
+      document.getElementById('productForm').style.display = 'block';
+      document.getElementById('productId').value = '';
+      document.getElementById('addProductForm').reset();
+    }
+
+    function hideProductForm() {
+      document.getElementById('productForm').style.display = 'none';
+    }
+
+    function salvarProduto(event) {
+      event.preventDefault();
+      
+      const id = document.getElementById('productId').value;
+      const nome = document.getElementById('productName').value;
+      const preco = parseFloat(document.getElementById('productPrice').value);
+      const estoque = parseInt(document.getElementById('productStock').value);
+      const categoria = document.getElementById('productCategory').value;
+      const descricao = document.getElementById('productDescription').value;
+      const imagem = document.getElementById('productImage').value;
+      
+      if (id) {
+        // Editar produto existente
+        const index = produtos.findIndex(p => p.id == id);
+        produtos[index] = {
+          ...produtos[index],
+          nome,
+          preco,
+          estoque,
+          categoria,
+          descricao,
+          imagem
+        };
+      } else {
+        // Adicionar novo produto
+        const novoId = produtos.length > 0 ? Math.max(...produtos.map(p => p.id)) + 1 : 1;
+        produtos.push({
+          id: novoId,
+          nome,
+          preco,
+          estoque,
+          categoria,
+          descricao,
+          imagem,
+          imagens: [imagem],
+          vendas: 0,
+          avaliacao: 0
+        });
+      }
+      
+      localStorage.setItem('produtos', JSON.stringify(produtos));
+      carregarDadosAdmin();
+      carregarProdutos();
+      hideProductForm();
+      alert("Produto salvo com sucesso!");
+    }
+
+    function editarProduto(id) {
+      const produto = produtos.find(p => p.id == id);
+      if (!produto) return;
+      
+      document.getElementById('productId').value = produto.id;
+      document.getElementById('productName').value = produto.nome;
+      document.getElementById('productPrice').value = produto.preco;
+      document.getElementById('productStock').value = produto.estoque;
+      document.getElementById('productCategory').value = produto.categoria || '';
+      document.getElementById('productDescription').value = produto.descricao || '';
+      document.getElementById('productImage').value = produto.imagem;
+      
+      document.getElementById('productForm').style.display = 'block';
+    }
+
+    function excluirProduto(id) {
+      if (confirm("Tem certeza que deseja excluir este produto?")) {
+        produtos = produtos.filter(p => p.id != id);
+        localStorage.setItem('produtos', JSON.stringify(produtos));
+        carregarDadosAdmin();
+        carregarProdutos();
+        alert("Produto excluído com sucesso!");
+      }
+    }
+
+    function showCouponForm() {
+      document.getElementById('couponForm').style.display = 'block';
+      document.getElementById('addCouponForm').reset();
+    }
+
+    function hideCouponForm() {
+      document.getElementById('couponForm').style.display = 'none';
+    }
+
+    function salvarCupom(event) {
+      event.preventDefault();
+      
+      const codigo = document.getElementById('couponCode').value;
+      const tipo = document.getElementById('couponType').value;
+      const valor = parseFloat(document.getElementById('couponValue').value);
+      const expiracao = document.getElementById('couponExpiry').value;
+      
+      // Verificar se já existe
+      const index = cupons.findIndex(c => c.codigo === codigo);
+      
+      if (index >= 0) {
+        // Atualizar cupom existente
+        cupons[index] = {
+          codigo,
+          tipo,
+          valor,
+          expiracao,
+          usos: cupons[index].usos
+        };
+      } else {
+        // Adicionar novo cupom
+        cupons.push({
+          codigo,
+          tipo,
+          valor,
+          expiracao,
+          usos: 0
+        });
+      }
+      
+      localStorage.setItem('cupons', JSON.stringify(cupons));
+      carregarDadosAdmin();
+      hideCouponForm();
+      alert("Cupom salvo com sucesso!");
+    }
+
+    function editarCupom(codigo) {
+      const cupom = cupons.find(c => c.codigo === codigo);
+      if (!cupom) return;
+      
+      document.getElementById('couponCode').value = cupom.codigo;
+      document.getElementById('couponType').value = cupom.tipo;
+      document.getElementById('couponValue').value = cupom.valor;
+      document.getElementById('couponExpiry').value = cupom.expiracao;
+      
+      document.getElementById('couponForm').style.display = 'block';
+    }
+
+    function excluirCupom(codigo) {
+      if (confirm("Tem certeza que deseja excluir este cupom?")) {
+        cupons = cupons.filter(c => c.codigo !== codigo);
+        localStorage.setItem('cupons', JSON.stringify(cupons));
+        carregarDadosAdmin();
+        alert("Cupom excluído com sucesso!");
+      }
+    }
+
+    function editarPedido(id) {
+      const pedido = pedidos.find(p => p.id == id);
+      if (!pedido) return;
+      
+      alert(`Editando pedido #${pedido.id}\nCliente: ${pedido.cliente}\nTotal: R$ ${pedido.total.toFixed(2)}`);
+      // Implemente a lógica de edição conforme necessário
     }
   </script>
 </body>

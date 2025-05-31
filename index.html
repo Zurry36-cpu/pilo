@@ -3,800 +3,1494 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shopee Clone</title>
+  <title>Shopee Clone - Painel Admin</title>
   <style>
     /* Reset básico */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
-      background-color: #f5f5f5;
+      background-color: #f5f7fa;
+      color: #333;
     }
 
-    header {
-      background-color: #ff5722;
-      color: white;
-      padding: 1rem;
+    /* Layout do painel */
+    .admin-container {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      min-height: 100vh;
     }
 
-    .logo {
-      font-weight: bold;
-      font-size: 1.5rem;
-    }
-
-    .search-bar {
-      display: flex;
-      margin: 0.5rem 0;
-    }
-
-    .search-bar input {
-      padding: 0.5rem;
-      border: none;
-      border-radius: 4px 0 0 4px;
-      width: 300px;
-    }
-
-    .search-bar button {
-      padding: 0.5rem;
-      border: none;
-      background: #333;
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: #2c3e50;
       color: white;
-      border-radius: 0 4px 4px 0;
-      cursor: pointer;
-    }
-
-    nav a {
-      color: white;
-      margin-left: 1rem;
-      text-decoration: none;
-    }
-
-    main {
-      padding: 1rem;
-      min-height: 80vh;
-    }
-
-    /* Página de Produtos */
-    .produtos {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
       padding: 1rem 0;
+      position: fixed;
+      height: 100%;
     }
 
-    .produto-card {
-      background: white;
-      border-radius: 8px;
-      padding: 1rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      transition: transform 0.2s;
-      cursor: pointer;
+    .sidebar-header {
+      padding: 0 1rem 1rem;
+      border-bottom: 1px solid #34495e;
+      margin-bottom: 1rem;
     }
 
-    .produto-card:hover {
-      transform: translateY(-5px);
+    .sidebar-header h2 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .produto-card img {
-      max-width: 100%;
-      height: 150px;
-      object-fit: contain;
+    .sidebar-menu {
+      list-style: none;
     }
 
-    .produto-card h3 {
-      margin: 0.5rem 0;
-      font-size: 1rem;
-    }
-
-    .produto-card p {
-      color: #ff5722;
-      font-weight: bold;
+    .sidebar-menu li {
       margin-bottom: 0.5rem;
     }
 
-    .produto-card button {
-      background: #ff5722;
-      color: white;
-      border: none;
-      padding: 0.5rem;
-      border-radius: 4px;
-      cursor: pointer;
-      margin: 0.25rem;
-      width: 100%;
+    .sidebar-menu a {
+      display: block;
+      color: #ecf0f1;
+      text-decoration: none;
+      padding: 0.75rem 1rem;
+      transition: all 0.3s;
     }
 
-    .produto-card button.favorito {
-      background: #333;
+    .sidebar-menu a:hover, .sidebar-menu a.active {
+      background-color: #34495e;
+      border-left: 4px solid #3498db;
     }
 
-    /* Página de Produto Detalhado */
-    .produto-detalhado {
+    .sidebar-menu i {
+      margin-right: 0.5rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Conteúdo principal */
+    .main-content {
+      flex: 1;
+      margin-left: 250px;
+      padding: 1.5rem;
+    }
+
+    .header {
       display: flex;
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      margin-top: 1rem;
-      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #ddd;
     }
 
-    .produto-galeria {
-      flex: 1;
-      min-width: 300px;
-      padding: 1rem;
-    }
-
-    .produto-galeria img {
-      width: 100%;
-      max-height: 400px;
-      object-fit: contain;
-    }
-
-    .produto-info {
-      flex: 1;
-      min-width: 300px;
-      padding: 1rem;
-    }
-
-    .produto-info h1 {
+    .header h1 {
       font-size: 1.8rem;
-      margin-bottom: 1rem;
-      color: #333;
+      color: #2c3e50;
     }
 
-    .produto-avaliacao {
+    .user-info {
       display: flex;
       align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    .produto-avaliacao .estrelas {
-      color: #FFD700;
-      margin-right: 0.5rem;
-    }
-
-    .produto-preco {
-      font-size: 1.5rem;
-      color: #ff5722;
-      font-weight: bold;
-      margin: 1rem 0;
-    }
-
-    .produto-descricao {
-      margin: 1rem 0;
-      line-height: 1.5;
-    }
-
-    .produto-opcoes {
-      margin: 1.5rem 0;
-    }
-
-    .produto-opcoes select {
-      padding: 0.5rem;
-      margin-right: 1rem;
-      border-radius: 4px;
-      border: 1px solid #ddd;
-    }
-
-    .produto-botoes {
-      display: flex;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .produto-botoes button {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 4px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .btn-comprar {
-      background-color: #ff5722;
-      color: white;
-    }
-
-    .btn-carrinho {
-      background-color: #ffd166;
-      color: #333;
-    }
-
-    .btn-favorito {
-      background-color: #333;
-      color: white;
-    }
-
-    /* Outras páginas */
-    footer {
-      text-align: center;
-      padding: 1rem;
-      background: #333;
-      color: white;
-      margin-top: 2rem;
-    }
-
-    .login-container, .carrinho-container, .favoritos-container {
-      max-width: 500px;
-      margin: 2rem auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .login-container h1, .carrinho-container h1, .favoritos-container h1 {
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
-
-    .login-container input {
-      display: block;
-      width: 100%;
-      padding: 0.75rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-
-    .login-container button {
-      width: 100%;
-      padding: 0.75rem;
-      background: #ff5722;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-
-    .login-container p {
-      text-align: center;
-      margin-top: 1rem;
-    }
-
-    .login-container a {
-      color: #ff5722;
-      text-decoration: none;
-    }
-
-    /* Esconder seções não ativas */
-    .page {
-      display: none;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    /* Miniaturas de imagens */
-    .miniaturas {
-      display: flex;
       gap: 0.5rem;
-      margin-top: 1rem;
     }
 
-    .miniatura {
-      width: 60px;
-      height: 60px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      cursor: pointer;
+    .user-info img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
       object-fit: cover;
     }
 
-    .miniatura:hover {
-      border-color: #ff5722;
+    /* Cards de resumo */
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
     }
 
-    /* Responsividade */
+    .summary-card {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .summary-card h3 {
+      color: #7f8c8d;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .summary-card .value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    .summary-card .trend {
+      display: flex;
+      align-items: center;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .trend.up {
+      color: #27ae60;
+    }
+
+    .trend.down {
+      color: #e74c3c;
+    }
+
+    /* Tabelas */
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .card-header h2 {
+      font-size: 1.3rem;
+      color: #2c3e50;
+    }
+
+    .card-header .actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+      color: #7f8c8d;
+    }
+
+    tr:hover {
+      background-color: #f8f9fa;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .status.pending {
+      background-color: #f39c12;
+      color: white;
+    }
+
+    .status.completed {
+      background-color: #27ae60;
+      color: white;
+    }
+
+    .status.cancelled {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .badge.primary {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .badge.success {
+      background-color: #27ae60;
+      color: white;
+    }
+
+    .badge.warning {
+      background-color: #f39c12;
+      color: white;
+    }
+
+    /* Formulários */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #2c3e50;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #3498db;
+    }
+
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #2980b9;
+    }
+
+    .btn-success {
+      background-color: #27ae60;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background-color: #219653;
+    }
+
+    .btn-danger {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #c0392b;
+    }
+
+    .btn-secondary {
+      background-color: #95a5a6;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background-color: #7f8c8d;
+    }
+
+    /* Alertas */
+    .alert {
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .alert-success {
+      background-color: #d5f5e3;
+      color: #27ae60;
+      border-left: 4px solid #27ae60;
+    }
+
+    .alert-danger {
+      background-color: #fadbd8;
+      color: #e74c3c;
+      border-left: 4px solid #e74c3c;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background-color: white;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 1.5rem;
+      color: #2c3e50;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-footer {
+      padding: 1.5rem;
+      border-top: 1px solid #eee;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+
+    .close {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #7f8c8d;
+    }
+
+    /* Abas */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab.active {
+      border-bottom-color: #3498db;
+      color: #3498db;
+      font-weight: 500;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Página de login */
+    .login-container {
+      max-width: 400px;
+      margin: 5rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-container h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #2c3e50;
+    }
+
+    .login-container .logo {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      color: #3498db;
+    }
+
+    /* Responsivo */
     @media (max-width: 768px) {
-      .produto-detalhado {
+      .sidebar {
+        width: 100%;
+        position: relative;
+        height: auto;
+      }
+
+      .admin-container {
         flex-direction: column;
       }
-      
-      .search-bar input {
-        width: 200px;
+
+      .main-content {
+        margin-left: 0;
       }
-      
-      header {
+
+      .form-row {
         flex-direction: column;
-        gap: 1rem;
-      }
-      
-      nav {
-        margin-top: 1rem;
+        gap: 0;
       }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">Shopee Clone</div>
-    <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="Buscar produtos...">
-      <button onclick="buscarProdutos()">🔍</button>
-    </div>
-    <nav>
-      <a href="#" onclick="mostrarPagina('home')">Início</a>
-      <a href="#" onclick="mostrarPagina('login')">Entrar</a>
-      <a href="#" onclick="mostrarPagina('carrinho')">🛒 Carrinho (<span id="carrinho-count">0</span>)</a>
-      <a href="#" onclick="mostrarPagina('favoritos')">❤️ Favoritos (<span id="favoritos-count">0</span>)</a>
-    </nav>
-  </header>
-
-  <!-- Página Inicial -->
-  <main id="home" class="page active">
-    <h1>Produtos em Destaque</h1>
-    <div class="produtos" id="produtos-container">
-      <!-- Produtos serão carregados via JavaScript -->
-    </div>
-  </main>
-
-  <!-- Página de Produto Detalhado -->
-  <main id="produto" class="page">
-    <div class="produto-detalhado" id="produto-container">
-      <!-- Conteúdo será carregado via JavaScript -->
-    </div>
-  </main>
-
-  <!-- Página de Login -->
-  <main id="login" class="page">
-    <div class="login-container">
-      <h1>Login</h1>
-      <form id="loginForm" onsubmit="fazerLogin(event)">
-        <input type="email" id="loginEmail" placeholder="E-mail" required>
-        <input type="password" id="loginSenha" placeholder="Senha" required>
-        <button type="submit">Entrar</button>
-      </form>
-      <p>Não tem conta? <a href="#" onclick="mostrarCadastro()">Cadastre-se</a></p>
-    </div>
-  </main>
-
-  <!-- Página de Cadastro -->
-  <main id="cadastro" class="page">
-    <div class="login-container">
-      <h1>Cadastro</h1>
-      <form id="cadastroForm" onsubmit="fazerCadastro(event)">
-        <input type="text" id="cadastroNome" placeholder="Nome completo" required>
-        <input type="email" id="cadastroEmail" placeholder="E-mail" required>
-        <input type="password" id="cadastroSenha" placeholder="Senha" required>
-        <button type="submit">Cadastrar</button>
-      </form>
-      <p>Já tem conta? <a href="#" onclick="mostrarLogin()">Faça login</a></p>
-    </div>
-  </main>
-
-  <!-- Página de Carrinho -->
-  <main id="carrinho" class="page">
-    <div class="carrinho-container">
-      <h1>Seu Carrinho</h1>
-      <div id="carrinho-itens">
-        <!-- Itens serão carregados via JavaScript -->
+  <!-- Painel Admin -->
+  <div class="admin-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>🛍️ Shopee Admin</h2>
       </div>
-      <div id="carrinho-total" style="margin-top: 1rem; font-weight: bold; text-align: right;"></div>
-      <button style="width: 100%; margin-top: 1rem;" onclick="finalizarCompra()">Finalizar Compra</button>
-    </div>
-  </main>
+      <ul class="sidebar-menu">
+        <li><a href="#" class="active" onclick="showSection('dashboard')"><i>📊</i> Dashboard</a></li>
+        <li><a href="#" onclick="showSection('products')"><i>📦</i> Produtos</a></li>
+        <li><a href="#" onclick="showSection('orders')"><i>🛒</i> Pedidos</a></li>
+        <li><a href="#" onclick="showSection('coupons')"><i>🎟️</i> Cupons</a></li>
+        <li><a href="#" onclick="showSection('reports')"><i>📈</i> Relatórios</a></li>
+        <li><a href="#" onclick="logout()"><i>🚪</i> Sair</a></li>
+      </ul>
+    </aside>
 
-  <!-- Página de Favoritos -->
-  <main id="favoritos" class="page">
-    <div class="favoritos-container">
-      <h1>Seus Favoritos</h1>
-      <div id="favoritos-itens" class="produtos">
-        <!-- Itens serão carregados via JavaScript -->
+    <!-- Conteúdo Principal -->
+    <main class="main-content">
+      <!-- Header -->
+      <div class="header">
+        <h1 id="page-title">Dashboard</h1>
+        <div class="user-info">
+          <img src="https://via.placeholder.com/40" alt="Admin">
+          <span>Administrador</span>
+        </div>
+      </div>
+
+      <!-- Dashboard -->
+      <div id="dashboard" class="page-section active">
+        <!-- Cards de Resumo -->
+        <div class="summary-cards">
+          <div class="summary-card">
+            <h3>Vendas Hoje</h3>
+            <div class="value">R$ 3.245,80</div>
+            <div class="trend up">↑ 12% em relação a ontem</div>
+          </div>
+          <div class="summary-card">
+            <h3>Pedidos Hoje</h3>
+            <div class="value">24</div>
+            <div class="trend up">↑ 8% em relação a ontem</div>
+          </div>
+          <div class="summary-card">
+            <h3>Novos Clientes</h3>
+            <div class="value">15</div>
+            <div class="trend down">↓ 5% em relação a ontem</div>
+          </div>
+          <div class="summary-card">
+            <h3>Produtos em Estoque</h3>
+            <div class="value">87</div>
+            <div class="trend up">↑ 3% em relação a semana passada</div>
+          </div>
+        </div>
+
+        <!-- Pedidos Recentes -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Pedidos Recentes</h2>
+            <div class="actions">
+              <button class="btn btn-secondary" onclick="showSection('orders')">Ver Todos</button>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Data</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="recent-orders">
+              <!-- Preenchido por JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Produtos em Alta -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Produtos em Alta</h2>
+            <div class="actions">
+              <button class="btn btn-secondary" onclick="showSection('products')">Ver Todos</button>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Vendas</th>
+                <th>Estoque</th>
+                <th>Preço</th>
+                <th>Avaliação</th>
+              </tr>
+            </thead>
+            <tbody id="top-products">
+              <!-- Preenchido por JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Gerenciamento de Produtos -->
+      <div id="products" class="page-section">
+        <div class="card">
+          <div class="card-header">
+            <h2>Gerenciamento de Produtos</h2>
+            <div class="actions">
+              <button class="btn btn-primary" onclick="openProductModal(null)">+ Adicionar Produto</button>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Imagem</th>
+                <th>Nome</th>
+                <th>Preço</th>
+                <th>Estoque</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="products-list">
+              <!-- Preenchido por JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Gerenciamento de Pedidos -->
+      <div id="orders" class="page-section">
+        <div class="tabs">
+          <div class="tab active" onclick="changeOrderTab('all')">Todos</div>
+          <div class="tab" onclick="changeOrderTab('pending')">Pendentes</div>
+          <div class="tab" onclick="changeOrderTab('completed')">Concluídos</div>
+          <div class="tab" onclick="changeOrderTab('cancelled')">Cancelados</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Gerenciamento de Pedidos</h2>
+            <div class="actions">
+              <button class="btn btn-secondary">Exportar</button>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Data</th>
+                <th>Itens</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="orders-list">
+              <!-- Preenchido por JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Gerenciamento de Cupons -->
+      <div id="coupons" class="page-section">
+        <div class="card">
+          <div class="card-header">
+            <h2>Gerenciamento de Cupons</h2>
+            <div class="actions">
+              <button class="btn btn-primary" onclick="openCouponModal(null)">+ Criar Cupom</button>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Tipo</th>
+                <th>Valor</th>
+                <th>Validade</th>
+                <th>Usos</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="coupons-list">
+              <!-- Preenchido por JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Relatórios -->
+      <div id="reports" class="page-section">
+        <div class="card">
+          <div class="card-header">
+            <h2>Relatórios de Vendas</h2>
+            <div class="actions">
+              <button class="btn btn-secondary">Exportar</button>
+            </div>
+          </div>
+          <div style="padding: 1rem;">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Data Inicial</label>
+                <input type="date" class="form-control" id="start-date">
+              </div>
+              <div class="form-group">
+                <label>Data Final</label>
+                <input type="date" class="form-control" id="end-date">
+              </div>
+              <div class="form-group">
+                <label>&nbsp;</label>
+                <button class="btn btn-primary" style="width: auto;" onclick="generateReport()">Gerar Relatório</button>
+              </div>
+            </div>
+          </div>
+          <div id="report-results" style="padding: 1rem;">
+            <p>Selecione um período e clique em "Gerar Relatório"</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal de Produto -->
+  <div class="modal" id="product-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="product-modal-title">Adicionar Novo Produto</h2>
+        <span class="close" onclick="closeModal('product-modal')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="product-form">
+          <input type="hidden" id="product-id">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="product-name">Nome do Produto</label>
+              <input type="text" class="form-control" id="product-name" required>
+            </div>
+            <div class="form-group">
+              <label for="product-price">Preço (R$)</label>
+              <input type="number" step="0.01" class="form-control" id="product-price" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="product-stock">Estoque</label>
+              <input type="number" class="form-control" id="product-stock" required>
+            </div>
+            <div class="form-group">
+              <label for="product-category">Categoria</label>
+              <select class="form-control" id="product-category" required>
+                <option value="">Selecione...</option>
+                <option value="eletronicos">Eletrônicos</option>
+                <option value="roupas">Roupas</option>
+                <option value="casa">Casa e Cozinha</option>
+                <option value="beleza">Beleza</option>
+                <option value="esportes">Esportes</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="product-description">Descrição</label>
+            <textarea class="form-control" id="product-description" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="product-images">Imagens (URLs separadas por vírgula)</label>
+            <textarea class="form-control" id="product-images" placeholder="https://exemplo.com/imagem1.jpg, https://exemplo.com/imagem2.jpg"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="product-status">Status</label>
+            <select class="form-control" id="product-status" required>
+              <option value="active">Ativo</option>
+              <option value="inactive">Inativo</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('product-modal')">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveProduct()">Salvar Produto</button>
       </div>
     </div>
-  </main>
+  </div>
 
-  <footer>
-    <p>© 2023 Shopee Clone - Versão Simplificada</p>
-  </footer>
+  <!-- Modal de Cupom -->
+  <div class="modal" id="coupon-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="coupon-modal-title">Criar Novo Cupom</h2>
+        <span class="close" onclick="closeModal('coupon-modal')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="coupon-form">
+          <input type="hidden" id="coupon-id">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="coupon-code">Código do Cupom</label>
+              <input type="text" class="form-control" id="coupon-code" required>
+            </div>
+            <div class="form-group">
+              <label for="coupon-type">Tipo de Desconto</label>
+              <select class="form-control" id="coupon-type" required>
+                <option value="percentage">Percentual</option>
+                <option value="fixed">Valor Fixo</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="coupon-value">Valor</label>
+              <input type="number" step="0.01" class="form-control" id="coupon-value" required>
+            </div>
+            <div class="form-group">
+              <label for="coupon-max-uses">Máximo de Usos (0 = ilimitado)</label>
+              <input type="number" class="form-control" id="coupon-max-uses" value="0" min="0">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="coupon-start-date">Data de Início</label>
+              <input type="date" class="form-control" id="coupon-start-date" required>
+            </div>
+            <div class="form-group">
+              <label for="coupon-end-date">Data de Término</label>
+              <input type="date" class="form-control" id="coupon-end-date" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="coupon-min-value">Valor Mínimo da Compra (R$)</label>
+            <input type="number" step="0.01" class="form-control" id="coupon-min-value" value="0" min="0">
+          </div>
+          <div class="form-group">
+            <label for="coupon-status">Status</label>
+            <select class="form-control" id="coupon-status" required>
+              <option value="active">Ativo</option>
+              <option value="inactive">Inativo</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('coupon-modal')">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveCoupon()">Salvar Cupom</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Detalhes do Pedido -->
+  <div class="modal" id="order-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="order-modal-title">Detalhes do Pedido #<span id="order-id"></span></h2>
+        <span class="close" onclick="closeModal('order-modal')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <h3>Informações do Cliente</h3>
+            <p><strong>Nome:</strong> <span id="customer-name"></span></p>
+            <p><strong>Email:</strong> <span id="customer-email"></span></p>
+            <p><strong>Telefone:</strong> <span id="customer-phone"></span></p>
+          </div>
+          <div class="form-group">
+            <h3>Endereço de Entrega</h3>
+            <p id="delivery-address"></p>
+          </div>
+        </div>
+        
+        <h3>Itens do Pedido</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Preço Unitário</th>
+              <th>Quantidade</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody id="order-items">
+            <!-- Preenchido por JavaScript -->
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" style="text-align: right;"><strong>Subtotal:</strong></td>
+              <td><span id="order-subtotal"></span></td>
+            </tr>
+            <tr>
+              <td colspan="3" style="text-align: right;"><strong>Frete:</strong></td>
+              <td><span id="order-shipping"></span></td>
+            </tr>
+            <tr>
+              <td colspan="3" style="text-align: right;"><strong>Desconto:</strong></td>
+              <td><span id="order-discount"></span></td>
+            </tr>
+            <tr>
+              <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
+              <td><strong><span id="order-total"></span></strong></td>
+            </tr>
+          </tfoot>
+        </table>
+        
+        <div class="form-group" style="margin-top: 1rem;">
+          <h3>Status do Pedido</h3>
+          <select class="form-control" id="order-status">
+            <option value="pending">Pendente</option>
+            <option value="processing">Processando</option>
+            <option value="shipped">Enviado</option>
+            <option value="delivered">Entregue</option>
+            <option value="cancelled">Cancelado</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <h3>Observações</h3>
+          <textarea class="form-control" id="order-notes" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('order-modal')">Fechar</button>
+        <button class="btn btn-primary" onclick="updateOrderStatus()">Atualizar Status</button>
+      </div>
+    </div>
+  </div>
 
   <script>
-    // Dados fictícios de produtos
-    const produtos = [
-      { 
-        id: 1, 
-        nome: "Smartphone XYZ", 
-        preco: 1999.99, 
-        imagem: "https://via.placeholder.com/500", 
-        imagens: [
-          "https://via.placeholder.com/500",
-          "https://via.placeholder.com/500/333",
-          "https://via.placeholder.com/500/555"
-        ],
-        descricao: "Smartphone premium com tela AMOLED de 6.5 polegadas, câmera tripla de 48MP e bateria de 5000mAh.",
-        avaliacao: 4.5,
-        estoque: 10,
-        variacoes: ["128GB", "256GB", "512GB"]
+    // Dados iniciais (simulando um banco de dados)
+    let products = JSON.parse(localStorage.getItem('admin-products')) || [
+      {
+        id: 1,
+        name: "Smartphone XYZ",
+        price: 1999.99,
+        stock: 15,
+        category: "eletronicos",
+        description: "Smartphone premium com tela AMOLED de 6.5 polegadas, câmera tripla de 48MP e bateria de 5000mAh.",
+        images: ["https://via.placeholder.com/500", "https://via.placeholder.com/500/333"],
+        status: "active",
+        sales: 42,
+        rating: 4.5
       },
-      { 
-        id: 2, 
-        nome: "Notebook ABC", 
-        preco: 3499.99, 
-        imagem: "https://via.placeholder.com/500", 
-        imagens: [
-          "https://via.placeholder.com/500",
-          "https://via.placeholder.com/500/444",
-          "https://via.placeholder.com/500/666"
-        ],
-        descricao: "Notebook ultraleve com processador i7, 16GB RAM, SSD 512GB e tela Full HD de 15.6 polegadas.",
-        avaliacao: 4.2,
-        estoque: 5,
-        variacoes: ["i5/8GB", "i7/16GB", "i9/32GB"]
+      {
+        id: 2,
+        name: "Notebook ABC",
+        price: 3499.99,
+        stock: 8,
+        category: "eletronicos",
+        description: "Notebook ultraleve com processador i7, 16GB RAM, SSD 512GB e tela Full HD de 15.6 polegadas.",
+        images: ["https://via.placeholder.com/500", "https://via.placeholder.com/500/444"],
+        status: "active",
+        sales: 28,
+        rating: 4.2
       },
-      { 
-        id: 3, 
-        nome: "Fone de Ouvido", 
-        preco: 199.99, 
-        imagem: "https://via.placeholder.com/500", 
-        imagens: [
-          "https://via.placeholder.com/500",
-          "https://via.placeholder.com/500/222",
-          "https://via.placeholder.com/500/777"
-        ],
-        descricao: "Fone de ouvido sem fio com cancelamento de ruído ativo e bateria de até 30 horas de duração.",
-        avaliacao: 4.7,
-        estoque: 20,
-        variacoes: ["Preto", "Branco", "Azul"]
-      },
-      { 
-        id: 4, 
-        nome: "Smartwatch", 
-        preco: 599.99, 
-        imagem: "https://via.placeholder.com/500", 
-        imagens: [
-          "https://via.placeholder.com/500",
-          "https://via.placeholder.com/500/111",
-          "https://via.placeholder.com/500/888"
-        ],
-        descricao: "Smartwatch com monitor de frequência cardíaca, GPS integrado e resistência à água até 50 metros.",
-        avaliacao: 4.3,
-        estoque: 8,
-        variacoes: ["Pequeno", "Médio", "Grande"]
+      {
+        id: 3,
+        name: "Fone de Ouvido",
+        price: 199.99,
+        stock: 32,
+        category: "eletronicos",
+        description: "Fone de ouvido sem fio com cancelamento de ruído ativo e bateria de até 30 horas de duração.",
+        images: ["https://via.placeholder.com/500", "https://via.placeholder.com/500/222"],
+        status: "active",
+        sales: 65,
+        rating: 4.7
       }
     ];
 
-    // Usuário logado
-    let usuarioLogado = null;
-    let produtoSelecionado = null;
+    let coupons = JSON.parse(localStorage.getItem('admin-coupons')) || [
+      {
+        id: 1,
+        code: "DESCONTO10",
+        type: "percentage",
+        value: 10,
+        maxUses: 100,
+        used: 42,
+        startDate: "2023-01-01",
+        endDate: "2023-12-31",
+        minValue: 100,
+        status: "active"
+      },
+      {
+        id: 2,
+        code: "FRETE0",
+        type: "fixed",
+        value: 15,
+        maxUses: 0,
+        used: 23,
+        startDate: "2023-01-01",
+        endDate: "2023-06-30",
+        minValue: 150,
+        status: "active"
+      }
+    ];
+
+    let orders = JSON.parse(localStorage.getItem('admin-orders')) || [
+      {
+        id: 1001,
+        customer: {
+          name: "João Silva",
+          email: "joao@exemplo.com",
+          phone: "(11) 99999-9999"
+        },
+        address: {
+          street: "Rua Exemplo, 123",
+          neighborhood: "Centro",
+          city: "São Paulo",
+          state: "SP",
+          zip: "01000-000"
+        },
+        items: [
+          { productId: 1, name: "Smartphone XYZ", price: 1999.99, quantity: 1 },
+          { productId: 3, name: "Fone de Ouvido", price: 199.99, quantity: 2 }
+        ],
+        subtotal: 2399.97,
+        shipping: 15.00,
+        discount: 0,
+        total: 2414.97,
+        status: "pending",
+        date: "2023-05-15",
+        notes: "Entregar de manhã"
+      },
+      {
+        id: 1002,
+        customer: {
+          name: "Maria Souza",
+          email: "maria@exemplo.com",
+          phone: "(21) 98888-8888"
+        },
+        address: {
+          street: "Av. Principal, 456",
+          neighborhood: "Jardim",
+          city: "Rio de Janeiro",
+          state: "RJ",
+          zip: "20000-000"
+        },
+        items: [
+          { productId: 2, name: "Notebook ABC", price: 3499.99, quantity: 1 }
+        ],
+        subtotal: 3499.99,
+        shipping: 0,
+        discount: 349.99,
+        total: 3150.00,
+        status: "completed",
+        date: "2023-05-10",
+        notes: "Usou cupom DESCONTO10"
+      }
+    ];
 
     // Inicialização
-    document.addEventListener("DOMContentLoaded", () => {
-      carregarProdutos();
-      atualizarContadores();
+    document.addEventListener('DOMContentLoaded', function() {
+      loadDashboard();
+      loadProducts();
+      loadOrders('all');
+      loadCoupons();
       
-      // Verificar se há usuário logado
-      const usuarioSalvo = localStorage.getItem("usuarioLogado");
-      if (usuarioSalvo) {
-        usuarioLogado = JSON.parse(usuarioSalvo);
-        document.querySelector('a[onclick="mostrarPagina(\'login\')"]').textContent = "Minha Conta";
-      }
+      // Definir datas padrão para o relatório
+      const today = new Date();
+      const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+      
+      document.getElementById('start-date').valueAsDate = firstDay;
+      document.getElementById('end-date').valueAsDate = today;
     });
 
-    // Função para mostrar páginas
-    function mostrarPagina(pagina) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(pagina).classList.add('active');
+    // Funções de navegação
+    function showSection(sectionId) {
+      document.querySelectorAll('.page-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(sectionId).classList.add('active');
       
-      if (pagina === 'carrinho') {
-        carregarCarrinho();
-      } else if (pagina === 'favoritos') {
-        carregarFavoritos();
-      } else if (pagina === 'home') {
-        carregarProdutos();
-      }
+      // Atualizar título da página
+      const titles = {
+        'dashboard': 'Dashboard',
+        'products': 'Produtos',
+        'orders': 'Pedidos',
+        'coupons': 'Cupons',
+        'reports': 'Relatórios'
+      };
+      document.getElementById('page-title').textContent = titles[sectionId];
     }
 
-    function mostrarLogin() {
-      mostrarPagina('login');
+    function changeOrderTab(tab) {
+      document.querySelectorAll('.tabs .tab').forEach(t => {
+        t.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      loadOrders(tab);
     }
 
-    function mostrarCadastro() {
-      mostrarPagina('cadastro');
-    }
-
-    function mostrarProduto(id) {
-      produtoSelecionado = produtos.find(p => p.id === id);
-      carregarProdutoDetalhado();
-      mostrarPagina('produto');
-    }
-
-    // Funções de produto
-    function carregarProdutos() {
-      const container = document.getElementById("produtos-container");
-      container.innerHTML = '';
+    // Funções do Dashboard
+    function loadDashboard() {
+      // Pedidos recentes (últimos 5)
+      const recentOrders = [...orders].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+      const recentOrdersHtml = recentOrders.map(order => `
+        <tr>
+          <td>#${order.id}</td>
+          <td>${order.customer.name}</td>
+          <td>${formatDate(order.date)}</td>
+          <td>R$ ${order.total.toFixed(2)}</td>
+          <td><span class="status ${order.status}">${getStatusText(order.status)}</span></td>
+          <td>
+            <button class="btn btn-secondary" onclick="viewOrderDetails(${order.id})">Ver</button>
+          </td>
+        </tr>
+      `).join('');
       
-      produtos.forEach(produto => {
-        const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-        const isFavorito = favoritos.some(f => f.id === produto.id);
+      document.getElementById('recent-orders').innerHTML = recentOrdersHtml;
+      
+      // Produtos em alta (top 5 por vendas)
+      const topProducts = [...products].sort((a, b) => b.sales - a.sales).slice(0, 5);
+      const topProductsHtml = topProducts.map(product => `
+        <tr>
+          <td>${product.name}</td>
+          <td>${product.sales}</td>
+          <td>${product.stock}</td>
+          <td>R$ ${product.price.toFixed(2)}</td>
+          <td>${product.rating.toFixed(1)} ★</td>
+        </tr>
+      `).join('');
+      
+      document.getElementById('top-products').innerHTML = topProductsHtml;
+    }
+
+    // Funções de Produtos
+    function loadProducts() {
+      const productsHtml = products.map(product => `
+        <tr>
+          <td>${product.id}</td>
+          <td><img src="${product.images[0]}" alt="${product.name}" style="width: 50px; height: 50px; object-fit: cover;"></td>
+          <td>${product.name}</td>
+          <td>R$ ${product.price.toFixed(2)}</td>
+          <td>${product.stock}</td>
+          <td>${product.status === 'active' ? '<span class="badge success">Ativo</span>' : '<span class="badge warning">Inativo</span>'}</td>
+          <td>
+            <button class="btn btn-secondary" onclick="openProductModal(${product.id})">Editar</button>
+            <button class="btn btn-danger" onclick="deleteProduct(${product.id})">Excluir</button>
+          </td>
+        </tr>
+      `).join('');
+      
+      document.getElementById('products-list').innerHTML = productsHtml;
+    }
+
+    function openProductModal(productId) {
+      const modal = document.getElementById('product-modal');
+      const form = document.getElementById('product-form');
+      
+      if (productId) {
+        // Modo edição
+        document.getElementById('product-modal-title').textContent = 'Editar Produto';
+        const product = products.find(p => p.id === productId);
         
-        container.innerHTML += `
-          <div class="produto-card" onclick="mostrarProduto(${produto.id})">
-            <img src="${produto.imagem}" alt="${produto.nome}">
-            <h3>${produto.nome}</h3>
-            <p>R$ ${produto.preco.toFixed(2)}</p>
-            <div class="produto-avaliacao">
-              <span class="estrelas">★★★★★</span>
-              <span>${produto.avaliacao.toFixed(1)}</span>
-            </div>
-            <button onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
-            <button class="${isFavorito ? 'favorito' : ''}" onclick="event.stopPropagation(); toggleFavorito(${produto.id})">
-              ${isFavorito ? '❤️ Remover' : '❤️ Favoritar'}
-            </button>
-          </div>
-        `;
-      });
-    }
-
-    function carregarProdutoDetalhado() {
-      if (!produtoSelecionado) return;
-      
-      const container = document.getElementById("produto-container");
-      const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-      const isFavorito = favoritos.some(f => f.id === produtoSelecionado.id);
-      
-      // Gerar opções de variações
-      let opcoesVariacao = '';
-      produtoSelecionado.variacoes.forEach(variacao => {
-        opcoesVariacao += `<option value="${variacao}">${variacao}</option>`;
-      });
-      
-      // Gerar miniaturas
-      let miniaturas = '';
-      produtoSelecionado.imagens.forEach((img, index) => {
-        miniaturas += `<img class="miniatura" src="${img}" onclick="trocarImagemPrincipal('${img}')" alt="Miniatura ${index + 1}">`;
-      });
-      
-      container.innerHTML = `
-        <div class="produto-galeria">
-          <img id="imagem-principal" src="${produtoSelecionado.imagem}" alt="${produtoSelecionado.nome}">
-          <div class="miniaturas">
-            ${miniaturas}
-          </div>
-        </div>
-        <div class="produto-info">
-          <h1>${produtoSelecionado.nome}</h1>
-          <div class="produto-avaliacao">
-            <span class="estrelas">${'★'.repeat(Math.round(produtoSelecionado.avaliacao))}${'☆'.repeat(5 - Math.round(produtoSelecionado.avaliacao))}</span>
-            <span>${produtoSelecionado.avaliacao.toFixed(1)} (${Math.floor(Math.random() * 100) + 50} avaliações)</span>
-          </div>
-          <div class="produto-preco">R$ ${produtoSelecionado.preco.toFixed(2)}</div>
-          <div class="produto-descricao">
-            <h3>Descrição do Produto</h3>
-            <p>${produtoSelecionado.descricao}</p>
-          </div>
-          <div class="produto-opcoes">
-            <select id="variacao-produto">
-              ${opcoesVariacao}
-            </select>
-            <span>Em estoque: ${produtoSelecionado.estoque} unidades</span>
-          </div>
-          <div class="produto-botoes">
-            <button class="btn-comprar" onclick="adicionarAoCarrinho(${produtoSelecionado.id}); mostrarPagina('carrinho')">Comprar agora</button>
-            <button class="btn-carrinho" onclick="adicionarAoCarrinho(${produtoSelecionado.id})">Adicionar ao carrinho</button>
-            <button class="btn-favorito" onclick="toggleFavorito(${produtoSelecionado.id})">
-              ${isFavorito ? '❤️ Remover dos favoritos' : '❤️ Adicionar aos favoritos'}
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
-    function trocarImagemPrincipal(src) {
-      document.getElementById("imagem-principal").src = src;
-    }
-
-    function buscarProdutos() {
-      const termo = document.getElementById("searchInput").value.toLowerCase();
-      const container = document.getElementById("produtos-container");
-      container.innerHTML = '';
-      
-      const produtosFiltrados = produtos.filter(produto => 
-        produto.nome.toLowerCase().includes(termo)
-      );
-      
-      if (produtosFiltrados.length === 0) {
-        container.innerHTML = '<p>Nenhum produto encontrado.</p>';
-        return;
-      }
-      
-      produtosFiltrados.forEach(produto => {
-        const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-        const isFavorito = favoritos.some(f => f.id === produto.id);
-        
-        container.innerHTML += `
-          <div class="produto-card" onclick="mostrarProduto(${produto.id})">
-            <img src="${produto.imagem}" alt="${produto.nome}">
-            <h3>${produto.nome}</h3>
-            <p>R$ ${produto.preco.toFixed(2)}</p>
-            <div class="produto-avaliacao">
-              <span class="estrelas">★★★★★</span>
-              <span>${produto.avaliacao.toFixed(1)}</span>
-            </div>
-            <button onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
-            <button class="${isFavorito ? 'favorito' : ''}" onclick="event.stopPropagation(); toggleFavorito(${produto.id})">
-              ${isFavorito ? '❤️ Remover' : '❤️ Favoritar'}
-            </button>
-          </div>
-        `;
-      });
-    }
-
-    // Funções de carrinho
-    function adicionarAoCarrinho(id) {
-      if (!usuarioLogado) {
-        alert("Por favor, faça login para adicionar itens ao carrinho.");
-        mostrarPagina('login');
-        return;
-      }
-      
-      const produto = produtos.find(p => p.id === id);
-      let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-      carrinho.push(produto);
-      localStorage.setItem("carrinho", JSON.stringify(carrinho));
-      atualizarContadores();
-      alert(`${produto.nome} adicionado ao carrinho!`);
-    }
-
-    function carregarCarrinho() {
-      const container = document.getElementById("carrinho-itens");
-      const totalContainer = document.getElementById("carrinho-total");
-      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-      
-      container.innerHTML = '';
-      
-      if (carrinho.length === 0) {
-        container.innerHTML = "<p>Seu carrinho está vazio.</p>";
-        totalContainer.textContent = '';
-        return;
-      }
-      
-      let total = 0;
-      carrinho.forEach((item, index) => {
-        total += item.preco;
-        container.innerHTML += `
-          <div class="produto-card">
-            <img src="${item.imagem}" alt="${item.nome}" style="width: 80px; height: 80px;">
-            <div>
-              <h3>${item.nome}</h3>
-              <p>R$ ${item.preco.toFixed(2)}</p>
-              <button onclick="removerDoCarrinho(${index})">Remover</button>
-            </div>
-          </div>
-        `;
-      });
-      
-      totalContainer.textContent = `Total: R$ ${total.toFixed(2)}`;
-    }
-
-    function removerDoCarrinho(index) {
-      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-      carrinho.splice(index, 1);
-      localStorage.setItem("carrinho", JSON.stringify(carrinho));
-      carregarCarrinho();
-      atualizarContadores();
-    }
-
-    function finalizarCompra() {
-      if (confirm("Deseja finalizar sua compra?")) {
-        localStorage.removeItem("carrinho");
-        carregarCarrinho();
-        atualizarContadores();
-        alert("Compra finalizada com sucesso! Obrigado.");
-        mostrarPagina('home');
-      }
-    }
-
-    // Funções de favoritos
-    function toggleFavorito(id) {
-      if (!usuarioLogado) {
-        alert("Por favor, faça login para favoritar produtos.");
-        mostrarPagina('login');
-        return;
-      }
-      
-      const produto = produtos.find(p => p.id === id);
-      let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-      
-      const index = favoritos.findIndex(f => f.id === id);
-      if (index >= 0) {
-        favoritos.splice(index, 1);
-        alert(`${produto.nome} removido dos favoritos!`);
+        document.getElementById('product-id').value = product.id;
+        document.getElementById('product-name').value = product.name;
+        document.getElementById('product-price').value = product.price;
+        document.getElementById('product-stock').value = product.stock;
+        document.getElementById('product-category').value = product.category;
+        document.getElementById('product-description').value = product.description;
+        document.getElementById('product-images').value = product.images.join(', ');
+        document.getElementById('product-status').value = product.status;
       } else {
-        favoritos.push(produto);
-        alert(`${produto.nome} adicionado aos favoritos!`);
+        // Modo adição
+        document.getElementById('product-modal-title').textContent = 'Adicionar Novo Produto';
+        form.reset();
+        document.getElementById('product-id').value = '';
       }
       
-      localStorage.setItem("favoritos", JSON.stringify(favoritos));
-      if (produtoSelecionado && produtoSelecionado.id === id) {
-        carregarProdutoDetalhado();
-      }
-      carregarProdutos();
-      carregarFavoritos();
-      atualizarContadores();
+      modal.classList.add('active');
     }
 
-    function carregarFavoritos() {
-      const container = document.getElementById("favoritos-itens");
-      const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+    function saveProduct() {
+      const form = document.getElementById('product-form');
+      const productId = document.getElementById('product-id').value;
       
-      container.innerHTML = '';
+      const productData = {
+        name: document.getElementById('product-name').value,
+        price: parseFloat(document.getElementById('product-price').value),
+        stock: parseInt(document.getElementById('product-stock').value),
+        category: document.getElementById('product-category').value,
+        description: document.getElementById('product-description').value,
+        images: document.getElementById('product-images').value.split(',').map(url => url.trim()),
+        status: document.getElementById('product-status').value
+      };
       
-      if (favoritos.length === 0) {
-        container.innerHTML = "<p>Você não tem produtos favoritados.</p>";
+      if (productId) {
+        // Atualizar produto existente
+        const index = products.findIndex(p => p.id === parseInt(productId));
+        products[index] = { ...products[index], ...productData };
+      } else {
+        // Adicionar novo produto
+        const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+        products.push({
+          id: newId,
+          ...productData,
+          sales: 0,
+          rating: 0
+        });
+      }
+      
+      localStorage.setItem('admin-products', JSON.stringify(products));
+      closeModal('product-modal');
+      loadProducts();
+      showAlert('success', 'Produto salvo com sucesso!');
+    }
+
+    function deleteProduct(productId) {
+      if (confirm('Tem certeza que deseja excluir este produto?')) {
+        products = products.filter(p => p.id !== productId);
+        localStorage.setItem('admin-products', JSON.stringify(products));
+        loadProducts();
+        showAlert('success', 'Produto excluído com sucesso!');
+      }
+    }
+
+    // Funções de Pedidos
+    function loadOrders(filter = 'all') {
+      let filteredOrders = [...orders];
+      
+      if (filter !== 'all') {
+        filteredOrders = orders.filter(order => order.status === filter);
+      }
+      
+      // Ordenar por data (mais recente primeiro)
+      filteredOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      const ordersHtml = filteredOrders.map(order => `
+        <tr>
+          <td>#${order.id}</td>
+          <td>${order.customer.name}</td>
+          <td>${formatDate(order.date)}</td>
+          <td>${order.items.length}</td>
+          <td>R$ ${order.total.toFixed(2)}</td>
+          <td><span class="status ${order.status}">${getStatusText(order.status)}</span></td>
+          <td>
+            <button class="btn btn-secondary" onclick="viewOrderDetails(${order.id})">Detalhes</button>
+          </td>
+        </tr>
+      `).join('');
+      
+      document.getElementById('orders-list').innerHTML = ordersHtml;
+    }
+
+    function viewOrderDetails(orderId) {
+      const order = orders.find(o => o.id === orderId);
+      if (!order) return;
+      
+      document.getElementById('order-id').textContent = order.id;
+      document.getElementById('customer-name').textContent = order.customer.name;
+      document.getElementById('customer-email').textContent = order.customer.email;
+      document.getElementById('customer-phone').textContent = order.customer.phone;
+      
+      const address = order.address;
+      document.getElementById('delivery-address').innerHTML = `
+        ${address.street}<br>
+        ${address.neighborhood}<br>
+        ${address.city} - ${address.state}<br>
+        CEP: ${address.zip}
+      `;
+      
+      const itemsHtml = order.items.map(item => `
+        <tr>
+          <td>${item.name}</td>
+          <td>R$ ${item.price.toFixed(2)}</td>
+          <td>${item.quantity}</td>
+          <td>R$ ${(item.price * item.quantity).toFixed(2)}</td>
+        </tr>
+      `).join('');
+      
+      document.getElementById('order-items').innerHTML = itemsHtml;
+      document.getElementById('order-subtotal').textContent = `R$ ${order.subtotal.toFixed(2)}`;
+      document.getElementById('order-shipping').textContent = `R$ ${order.shipping.toFixed(2)}`;
+      document.getElementById('order-discount').textContent = `R$ ${order.discount.toFixed(2)}`;
+      document.getElementById('order-total').textContent = `R$ ${order.total.toFixed(2)}`;
+      document.getElementById('order-status').value = order.status;
+      document.getElementById('order-notes').value = order.notes || '';
+      
+      document.getElementById('order-modal').classList.add('active');
+    }
+
+    function updateOrderStatus() {
+      const orderId = parseInt(document.getElementById('order-id').textContent);
+      const newStatus = document.getElementById('order-status').value;
+      const notes = document.getElementById('order-notes').value;
+      
+      const index = orders.findIndex(o => o.id === orderId);
+      if (index !== -1) {
+        orders[index].status = newStatus;
+        orders[index].notes = notes;
+        localStorage.setItem('admin-orders', JSON.stringify(orders));
+        
+        closeModal('order-modal');
+        loadOrders();
+        showAlert('success', 'Status do pedido atualizado com sucesso!');
+      }
+    }
+
+    // Funções de Cupons
+    function loadCoupons() {
+      const couponsHtml = coupons.map(coupon => `
+        <tr>
+          <td>${coupon.code}</td>
+          <td>${coupon.type === 'percentage' ? 'Percentual' : 'Valor Fixo'}</td>
+          <td>${coupon.type === 'percentage' ? `${coupon.value}%` : `R$ ${coupon.value.toFixed(2)}`}</td>
+          <td>${formatDate(coupon.startDate)} a ${formatDate(coupon.endDate)}</td>
+          <td>${coupon.used}${coupon.maxUses > 0 ? `/${coupon.maxUses}` : ''}</td>
+          <td>${coupon.status === 'active' ? '<span class="badge success">Ativo</span>' : '<span class="badge warning">Inativo</span>'}</td>
+          <td>
+            <button class="btn btn-secondary" onclick="openCouponModal(${coupon.id})">Editar</button>
+            <button class="btn btn-danger" onclick="deleteCoupon(${coupon.id})">Excluir</button>
+          </td>
+        </tr>
+      `).join('');
+      
+      document.getElementById('coupons-list').innerHTML = couponsHtml;
+    }
+
+    function openCouponModal(couponId) {
+      const modal = document.getElementById('coupon-modal');
+      const form = document.getElementById('coupon-form');
+      
+      if (couponId) {
+        // Modo edição
+        document.getElementById('coupon-modal-title').textContent = 'Editar Cupom';
+        const coupon = coupons.find(c => c.id === couponId);
+        
+        document.getElementById('coupon-id').value = coupon.id;
+        document.getElementById('coupon-code').value = coupon.code;
+        document.getElementById('coupon-type').value = coupon.type;
+        document.getElementById('coupon-value').value = coupon.value;
+        document.getElementById('coupon-max-uses').value = coupon.maxUses;
+        document.getElementById('coupon-start-date').value = coupon.startDate;
+        document.getElementById('coupon-end-date').value = coupon.endDate;
+        document.getElementById('coupon-min-value').value = coupon.minValue;
+        document.getElementById('coupon-status').value = coupon.status;
+      } else {
+        // Modo adição
+        document.getElementById('coupon-modal-title').textContent = 'Criar Novo Cupom';
+        form.reset();
+        document.getElementById('coupon-id').value = '';
+        document.getElementById('coupon-max-uses').value = '0';
+        document.getElementById('coupon-min-value').value = '0';
+        
+        // Definir datas padrão
+        const today = new Date().toISOString().split('T')[0];
+        const nextMonth = new Date();
+        nextMonth.setMonth(nextMonth.getMonth() + 1);
+        const nextMonthStr = nextMonth.toISOString().split('T')[0];
+        
+        document.getElementById('coupon-start-date').value = today;
+        document.getElementById('coupon-end-date').value = nextMonthStr;
+      }
+      
+      modal.classList.add('active');
+    }
+
+    function saveCoupon() {
+      const form = document.getElementById('coupon-form');
+      const couponId = document.getElementById('coupon-id').value;
+      
+      const couponData = {
+        code: document.getElementById('coupon-code').value,
+        type: document.getElementById('coupon-type').value,
+        value: parseFloat(document.getElementById('coupon-value').value),
+        maxUses: parseInt(document.getElementById('coupon-max-uses').value),
+        startDate: document.getElementById('coupon-start-date').value,
+        endDate: document.getElementById('coupon-end-date').value,
+        minValue: parseFloat(document.getElementById('coupon-min-value').value),
+        status: document.getElementById('coupon-status').value
+      };
+      
+      if (couponId) {
+        // Atualizar cupom existente
+        const index = coupons.findIndex(c => c.id === parseInt(couponId));
+        coupons[index] = { ...coupons[index], ...couponData };
+      } else {
+        // Adicionar novo cupom
+        const newId = coupons.length > 0 ? Math.max(...coupons.map(c => c.id)) + 1 : 1;
+        coupons.push({
+          id: newId,
+          ...couponData,
+          used: 0
+        });
+      }
+      
+      localStorage.setItem('admin-coupons', JSON.stringify(coupons));
+      closeModal('coupon-modal');
+      loadCoupons();
+      showAlert('success', 'Cupom salvo com sucesso!');
+    }
+
+    function deleteCoupon(couponId) {
+      if (confirm('Tem certeza que deseja excluir este cupom?')) {
+        coupons = coupons.filter(c => c.id !== couponId);
+        localStorage.setItem('admin-coupons', JSON.stringify(coupons));
+        loadCoupons();
+        showAlert('success', 'Cupom excluído com sucesso!');
+      }
+    }
+
+    // Funções de Relatórios
+    function generateReport() {
+      const startDate = document.getElementById('start-date').value;
+      const endDate = document.getElementById('end-date').value;
+      
+      if (!startDate || !endDate) {
+        showAlert('danger', 'Por favor, selecione um período válido.');
         return;
       }
       
-      favoritos.forEach(produto => {
-        container.innerHTML += `
-          <div class="produto-card" onclick="mostrarProduto(${produto.id})">
-            <img src="${produto.imagem}" alt="${produto.nome}">
-            <h3>${produto.nome}</h3>
-            <p>R$ ${produto.preco.toFixed(2)}</p>
-            <button onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
-            <button class="favorito" onclick="event.stopPropagation(); toggleFavorito(${produto.id})">❤️ Remover</button>
-          </div>
-        `;
+      // Filtrar pedidos pelo período
+      const filteredOrders = orders.filter(order => {
+        const orderDate = new Date(order.date);
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        return orderDate >= start && orderDate <= end;
       });
+      
+      // Calcular totais
+      const totalSales = filteredOrders.reduce((sum, order) => sum + order.total, 0);
+      const totalOrders = filteredOrders.length;
+      const avgOrderValue = totalOrders > 0 ? totalSales / totalOrders : 0;
+      
+      // Gerar HTML do relatório
+      const reportHtml = `
+        <h3>Relatório de ${formatDate(startDate)} a ${formatDate(endDate)}</h3>
+        <div class="summary-cards" style="margin-top: 1rem;">
+          <div class="summary-card">
+            <h3>Total de Vendas</h3>
+            <div class="value">R$ ${totalSales.toFixed(2)}</div>
+          </div>
+          <div class="summary-card">
+            <h3>Número de Pedidos</h3>
+            <div class="value">${totalOrders}</div>
+          </div>
+          <div class="summary-card">
+            <h3>Ticket Médio</h3>
+            <div class="value">R$ ${avgOrderValue.toFixed(2)}</div>
+          </div>
+        </div>
+        
+        <h3 style="margin-top: 2rem;">Pedidos no Período</h3>
+        <table style="margin-top: 1rem;">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Data</th>
+              <th>Cliente</th>
+              <th>Total</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filteredOrders.map(order => `
+              <tr>
+                <td>#${order.id}</td>
+                <td>${formatDate(order.date)}</td>
+                <td>${order.customer.name}</td>
+                <td>R$ ${order.total.toFixed(2)}</td>
+                <td><span class="status ${order.status}">${getStatusText(order.status)}</span></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+      
+      document.getElementById('report-results').innerHTML = reportHtml;
     }
 
-    // Funções de autenticação
-    function fazerLogin(event) {
-      event.preventDefault();
-      const email = document.getElementById("loginEmail").value;
-      const senha = document.getElementById("loginSenha").value;
+    // Funções auxiliares
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+    }
+
+    function showAlert(type, message) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type}`;
+      alertDiv.textContent = message;
       
-      // Simulação de login (em um sistema real, isso viria de um backend)
-      usuarioLogado = {
-        email,
-        nome: email.split('@')[0]
+      const header = document.querySelector('.header');
+      header.insertAdjacentElement('afterend', alertDiv);
+      
+      setTimeout(() => {
+        alertDiv.remove();
+      }, 5000);
+    }
+
+    function formatDate(dateString) {
+      const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+      return new Date(dateString).toLocaleDateString('pt-BR', options);
+    }
+
+    function getStatusText(status) {
+      const statusTexts = {
+        'pending': 'Pendente',
+        'processing': 'Processando',
+        'shipped': 'Enviado',
+        'delivered': 'Entregue',
+        'completed': 'Concluído',
+        'cancelled': 'Cancelado'
       };
-      
-      localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
-      alert(`Bem-vindo, ${usuarioLogado.nome}!`);
-      document.querySelector('a[onclick="mostrarPagina(\'login\')"]').textContent = "Minha Conta";
-      mostrarPagina('home');
+      return statusTexts[status] || status;
     }
 
-    function fazerCadastro(event) {
-      event.preventDefault();
-      const nome = document.getElementById("cadastroNome").value;
-      const email = document.getElementById("cadastroEmail").value;
-      const senha = document.getElementById("cadastroSenha").value;
-      
-      // Simulação de cadastro
-      usuarioLogado = {
-        email,
-        nome
-      };
-      
-      localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
-      alert(`Cadastro realizado com sucesso, ${nome}!`);
-      document.querySelector('a[onclick="mostrarPagina(\'login\')"]').textContent = "Minha Conta";
-      mostrarPagina('home');
-    }
-
-    // Atualizar contadores
-    function atualizarContadores() {
-      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-      const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
-      
-      document.getElementById("carrinho-count").textContent = carrinho.length;
-      document.getElementById("favoritos-count").textContent = favoritos.length;
+    function logout() {
+      if (confirm('Deseja realmente sair do painel administrativo?')) {
+        // Redirecionar para a página de login (simulação)
+        window.location.href = 'login.html';
+      }
     }
   </script>
 </body>

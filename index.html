@@ -25,6 +25,9 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     .logo {
@@ -64,6 +67,7 @@
       min-height: 80vh;
     }
 
+    /* Página de Produtos */
     .produtos {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -78,6 +82,7 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       text-align: center;
       transition: transform 0.2s;
+      cursor: pointer;
     }
 
     .produto-card:hover {
@@ -116,6 +121,105 @@
       background: #333;
     }
 
+    /* Página de Produto Detalhado */
+    .produto-detalhado {
+      display: flex;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .produto-galeria {
+      flex: 1;
+      min-width: 300px;
+      padding: 1rem;
+    }
+
+    .produto-galeria img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+    }
+
+    .produto-info {
+      flex: 1;
+      min-width: 300px;
+      padding: 1rem;
+    }
+
+    .produto-info h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .produto-avaliacao {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .produto-avaliacao .estrelas {
+      color: #FFD700;
+      margin-right: 0.5rem;
+    }
+
+    .produto-preco {
+      font-size: 1.5rem;
+      color: #ff5722;
+      font-weight: bold;
+      margin: 1rem 0;
+    }
+
+    .produto-descricao {
+      margin: 1rem 0;
+      line-height: 1.5;
+    }
+
+    .produto-opcoes {
+      margin: 1.5rem 0;
+    }
+
+    .produto-opcoes select {
+      padding: 0.5rem;
+      margin-right: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+
+    .produto-botoes {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .produto-botoes button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-comprar {
+      background-color: #ff5722;
+      color: white;
+    }
+
+    .btn-carrinho {
+      background-color: #ffd166;
+      color: #333;
+    }
+
+    .btn-favorito {
+      background-color: #333;
+      color: white;
+    }
+
+    /* Outras páginas */
     footer {
       text-align: center;
       padding: 1rem;
@@ -124,7 +228,6 @@
       margin-top: 2rem;
     }
 
-    /* Páginas específicas */
     .login-container, .carrinho-container, .favoritos-container {
       max-width: 500px;
       margin: 2rem auto;
@@ -177,6 +280,46 @@
     .page.active {
       display: block;
     }
+
+    /* Miniaturas de imagens */
+    .miniaturas {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .miniatura {
+      width: 60px;
+      height: 60px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      object-fit: cover;
+    }
+
+    .miniatura:hover {
+      border-color: #ff5722;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .produto-detalhado {
+        flex-direction: column;
+      }
+      
+      .search-bar input {
+        width: 200px;
+      }
+      
+      header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav {
+        margin-top: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -199,6 +342,13 @@
     <h1>Produtos em Destaque</h1>
     <div class="produtos" id="produtos-container">
       <!-- Produtos serão carregados via JavaScript -->
+    </div>
+  </main>
+
+  <!-- Página de Produto Detalhado -->
+  <main id="produto" class="page">
+    <div class="produto-detalhado" id="produto-container">
+      <!-- Conteúdo será carregado via JavaScript -->
     </div>
   </main>
 
@@ -258,16 +408,71 @@
   <script>
     // Dados fictícios de produtos
     const produtos = [
-      { id: 1, nome: "Smartphone XYZ", preco: 1999.99, imagem: "https://via.placeholder.com/150" },
-      { id: 2, nome: "Notebook ABC", preco: 3499.99, imagem: "https://via.placeholder.com/150" },
-      { id: 3, nome: "Fone de Ouvido", preco: 199.99, imagem: "https://via.placeholder.com/150" },
-      { id: 4, nome: "Smartwatch", preco: 599.99, imagem: "https://via.placeholder.com/150" },
-      { id: 5, nome: "Tablet", preco: 1299.99, imagem: "https://via.placeholder.com/150" },
-      { id: 6, nome: "Câmera Digital", preco: 899.99, imagem: "https://via.placeholder.com/150" },
+      { 
+        id: 1, 
+        nome: "Smartphone XYZ", 
+        preco: 1999.99, 
+        imagem: "https://via.placeholder.com/500", 
+        imagens: [
+          "https://via.placeholder.com/500",
+          "https://via.placeholder.com/500/333",
+          "https://via.placeholder.com/500/555"
+        ],
+        descricao: "Smartphone premium com tela AMOLED de 6.5 polegadas, câmera tripla de 48MP e bateria de 5000mAh.",
+        avaliacao: 4.5,
+        estoque: 10,
+        variacoes: ["128GB", "256GB", "512GB"]
+      },
+      { 
+        id: 2, 
+        nome: "Notebook ABC", 
+        preco: 3499.99, 
+        imagem: "https://via.placeholder.com/500", 
+        imagens: [
+          "https://via.placeholder.com/500",
+          "https://via.placeholder.com/500/444",
+          "https://via.placeholder.com/500/666"
+        ],
+        descricao: "Notebook ultraleve com processador i7, 16GB RAM, SSD 512GB e tela Full HD de 15.6 polegadas.",
+        avaliacao: 4.2,
+        estoque: 5,
+        variacoes: ["i5/8GB", "i7/16GB", "i9/32GB"]
+      },
+      { 
+        id: 3, 
+        nome: "Fone de Ouvido", 
+        preco: 199.99, 
+        imagem: "https://via.placeholder.com/500", 
+        imagens: [
+          "https://via.placeholder.com/500",
+          "https://via.placeholder.com/500/222",
+          "https://via.placeholder.com/500/777"
+        ],
+        descricao: "Fone de ouvido sem fio com cancelamento de ruído ativo e bateria de até 30 horas de duração.",
+        avaliacao: 4.7,
+        estoque: 20,
+        variacoes: ["Preto", "Branco", "Azul"]
+      },
+      { 
+        id: 4, 
+        nome: "Smartwatch", 
+        preco: 599.99, 
+        imagem: "https://via.placeholder.com/500", 
+        imagens: [
+          "https://via.placeholder.com/500",
+          "https://via.placeholder.com/500/111",
+          "https://via.placeholder.com/500/888"
+        ],
+        descricao: "Smartwatch com monitor de frequência cardíaca, GPS integrado e resistência à água até 50 metros.",
+        avaliacao: 4.3,
+        estoque: 8,
+        variacoes: ["Pequeno", "Médio", "Grande"]
+      }
     ];
 
     // Usuário logado
     let usuarioLogado = null;
+    let produtoSelecionado = null;
 
     // Inicialização
     document.addEventListener("DOMContentLoaded", () => {
@@ -291,6 +496,8 @@
         carregarCarrinho();
       } else if (pagina === 'favoritos') {
         carregarFavoritos();
+      } else if (pagina === 'home') {
+        carregarProdutos();
       }
     }
 
@@ -300,6 +507,12 @@
 
     function mostrarCadastro() {
       mostrarPagina('cadastro');
+    }
+
+    function mostrarProduto(id) {
+      produtoSelecionado = produtos.find(p => p.id === id);
+      carregarProdutoDetalhado();
+      mostrarPagina('produto');
     }
 
     // Funções de produto
@@ -312,17 +525,79 @@
         const isFavorito = favoritos.some(f => f.id === produto.id);
         
         container.innerHTML += `
-          <div class="produto-card">
+          <div class="produto-card" onclick="mostrarProduto(${produto.id})">
             <img src="${produto.imagem}" alt="${produto.nome}">
             <h3>${produto.nome}</h3>
             <p>R$ ${produto.preco.toFixed(2)}</p>
-            <button onclick="adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
-            <button class="${isFavorito ? 'favorito' : ''}" onclick="toggleFavorito(${produto.id})">
+            <div class="produto-avaliacao">
+              <span class="estrelas">★★★★★</span>
+              <span>${produto.avaliacao.toFixed(1)}</span>
+            </div>
+            <button onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
+            <button class="${isFavorito ? 'favorito' : ''}" onclick="event.stopPropagation(); toggleFavorito(${produto.id})">
               ${isFavorito ? '❤️ Remover' : '❤️ Favoritar'}
             </button>
           </div>
         `;
       });
+    }
+
+    function carregarProdutoDetalhado() {
+      if (!produtoSelecionado) return;
+      
+      const container = document.getElementById("produto-container");
+      const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+      const isFavorito = favoritos.some(f => f.id === produtoSelecionado.id);
+      
+      // Gerar opções de variações
+      let opcoesVariacao = '';
+      produtoSelecionado.variacoes.forEach(variacao => {
+        opcoesVariacao += `<option value="${variacao}">${variacao}</option>`;
+      });
+      
+      // Gerar miniaturas
+      let miniaturas = '';
+      produtoSelecionado.imagens.forEach((img, index) => {
+        miniaturas += `<img class="miniatura" src="${img}" onclick="trocarImagemPrincipal('${img}')" alt="Miniatura ${index + 1}">`;
+      });
+      
+      container.innerHTML = `
+        <div class="produto-galeria">
+          <img id="imagem-principal" src="${produtoSelecionado.imagem}" alt="${produtoSelecionado.nome}">
+          <div class="miniaturas">
+            ${miniaturas}
+          </div>
+        </div>
+        <div class="produto-info">
+          <h1>${produtoSelecionado.nome}</h1>
+          <div class="produto-avaliacao">
+            <span class="estrelas">${'★'.repeat(Math.round(produtoSelecionado.avaliacao))}${'☆'.repeat(5 - Math.round(produtoSelecionado.avaliacao))}</span>
+            <span>${produtoSelecionado.avaliacao.toFixed(1)} (${Math.floor(Math.random() * 100) + 50} avaliações)</span>
+          </div>
+          <div class="produto-preco">R$ ${produtoSelecionado.preco.toFixed(2)}</div>
+          <div class="produto-descricao">
+            <h3>Descrição do Produto</h3>
+            <p>${produtoSelecionado.descricao}</p>
+          </div>
+          <div class="produto-opcoes">
+            <select id="variacao-produto">
+              ${opcoesVariacao}
+            </select>
+            <span>Em estoque: ${produtoSelecionado.estoque} unidades</span>
+          </div>
+          <div class="produto-botoes">
+            <button class="btn-comprar" onclick="adicionarAoCarrinho(${produtoSelecionado.id}); mostrarPagina('carrinho')">Comprar agora</button>
+            <button class="btn-carrinho" onclick="adicionarAoCarrinho(${produtoSelecionado.id})">Adicionar ao carrinho</button>
+            <button class="btn-favorito" onclick="toggleFavorito(${produtoSelecionado.id})">
+              ${isFavorito ? '❤️ Remover dos favoritos' : '❤️ Adicionar aos favoritos'}
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function trocarImagemPrincipal(src) {
+      document.getElementById("imagem-principal").src = src;
     }
 
     function buscarProdutos() {
@@ -344,12 +619,16 @@
         const isFavorito = favoritos.some(f => f.id === produto.id);
         
         container.innerHTML += `
-          <div class="produto-card">
+          <div class="produto-card" onclick="mostrarProduto(${produto.id})">
             <img src="${produto.imagem}" alt="${produto.nome}">
             <h3>${produto.nome}</h3>
             <p>R$ ${produto.preco.toFixed(2)}</p>
-            <button onclick="adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
-            <button class="${isFavorito ? 'favorito' : ''}" onclick="toggleFavorito(${produto.id})">
+            <div class="produto-avaliacao">
+              <span class="estrelas">★★★★★</span>
+              <span>${produto.avaliacao.toFixed(1)}</span>
+            </div>
+            <button onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
+            <button class="${isFavorito ? 'favorito' : ''}" onclick="event.stopPropagation(); toggleFavorito(${produto.id})">
               ${isFavorito ? '❤️ Remover' : '❤️ Favoritar'}
             </button>
           </div>
@@ -391,9 +670,12 @@
         total += item.preco;
         container.innerHTML += `
           <div class="produto-card">
-            <h3>${item.nome}</h3>
-            <p>R$ ${item.preco.toFixed(2)}</p>
-            <button onclick="removerDoCarrinho(${index})">Remover</button>
+            <img src="${item.imagem}" alt="${item.nome}" style="width: 80px; height: 80px;">
+            <div>
+              <h3>${item.nome}</h3>
+              <p>R$ ${item.preco.toFixed(2)}</p>
+              <button onclick="removerDoCarrinho(${index})">Remover</button>
+            </div>
           </div>
         `;
       });
@@ -440,6 +722,9 @@
       }
       
       localStorage.setItem("favoritos", JSON.stringify(favoritos));
+      if (produtoSelecionado && produtoSelecionado.id === id) {
+        carregarProdutoDetalhado();
+      }
       carregarProdutos();
       carregarFavoritos();
       atualizarContadores();
@@ -458,12 +743,12 @@
       
       favoritos.forEach(produto => {
         container.innerHTML += `
-          <div class="produto-card">
+          <div class="produto-card" onclick="mostrarProduto(${produto.id})">
             <img src="${produto.imagem}" alt="${produto.nome}">
             <h3>${produto.nome}</h3>
             <p>R$ ${produto.preco.toFixed(2)}</p>
-            <button onclick="adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
-            <button class="favorito" onclick="toggleFavorito(${produto.id})">❤️ Remover</button>
+            <button onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
+            <button class="favorito" onclick="event.stopPropagation(); toggleFavorito(${produto.id})">❤️ Remover</button>
           </div>
         `;
       });

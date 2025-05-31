@@ -5,819 +5,181 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shopee Clone</title>
   <style>
-    /* Reset básico */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+    /* [Seus estilos existentes permanecem aqui...] */
 
-    body {
-      background-color: #f5f5f5;
-    }
-
-    header {
-      background-color: #ff5722;
-      color: white;
+    /* Novos estilos para a seção de cupom */
+    .cupom-section {
+      margin: 1rem 0;
       padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .cupom-container {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
     }
 
-    .logo {
-      font-weight: bold;
-      font-size: 1.5rem;
-    }
-
-    .search-bar {
-      display: flex;
-      margin: 0.5rem 0;
-    }
-
-    .search-bar input {
+    .cupom-container input {
+      flex: 1;
       padding: 0.5rem;
-      border: none;
-      border-radius: 4px 0 0 4px;
-      width: 300px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
     }
 
-    .search-bar button {
-      padding: 0.5rem;
-      border: none;
-      background: #333;
+    .cupom-container button {
+      padding: 0.5rem 1rem;
+      background: #28a745;
       color: white;
-      border-radius: 0 4px 4px 0;
+      border: none;
+      border-radius: 4px;
       cursor: pointer;
     }
 
-    nav a {
-      color: white;
-      margin-left: 1rem;
-      text-decoration: none;
+    .cupom-message {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
     }
 
-    main {
-      padding: 1rem;
-      min-height: 80vh;
-    }
-
-    .produtos {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
-      padding: 1rem 0;
-    }
-
-    .produto-card {
-      background: white;
-      border-radius: 8px;
-      padding: 1rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      transition: transform 0.2s;
-    }
-
-    .produto-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .produto-card img {
-      max-width: 100%;
-      height: 150px;
-      object-fit: contain;
-    }
-
-    .produto-card h3 {
-      margin: 0.5rem 0;
-      font-size: 1rem;
-    }
-
-    .produto-card p {
-      color: #ff5722;
+    .cupom-success {
+      color: #28a745;
       font-weight: bold;
+    }
+
+    .cupom-error {
+      color: #dc3545;
+    }
+
+    /* Estilos para o resumo do pedido */
+    .resumo-pedido {
+      margin-top: 1rem;
+      border-top: 1px solid #eee;
+      padding-top: 1rem;
+    }
+
+    .resumo-linha {
+      display: flex;
+      justify-content: space-between;
       margin-bottom: 0.5rem;
     }
 
-    .produto-card button {
-      background: #ff5722;
-      color: white;
-      border: none;
-      padding: 0.5rem;
-      border-radius: 4px;
-      cursor: pointer;
-      margin: 0.25rem;
-      width: 100%;
+    .desconto {
+      color: #28a745;
     }
 
-    .produto-card button.favorito {
-      background: #333;
-    }
-
-    footer {
-      text-align: center;
-      padding: 1rem;
-      background: #333;
-      color: white;
-      margin-top: 2rem;
-    }
-
-    /* Páginas específicas */
-    .login-container, .carrinho-container, .favoritos-container {
-      max-width: 500px;
-      margin: 2rem auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .login-container h1, .carrinho-container h1, .favoritos-container h1 {
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
-
-    .login-container input {
-      display: block;
-      width: 100%;
-      padding: 0.75rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-
-    .login-container button {
-      width: 100%;
-      padding: 0.75rem;
-      background: #ff5722;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-
-    .login-container p {
-      text-align: center;
-      margin-top: 1rem;
-    }
-
-    .login-container a {
-      color: #ff5722;
-      text-decoration: none;
-    }
-
-    /* Esconder seções não ativas */
-    .page {
-      display: none;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    /* Página de Produto Detalhado */
-    .produto-detalhado {
-      display: flex;
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      margin-top: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .produto-galeria {
-      flex: 1;
-      min-width: 300px;
-      padding: 1rem;
-    }
-
-    .produto-galeria img {
-      width: 100%;
-      max-height: 400px;
-      object-fit: contain;
-    }
-
-    .produto-info {
-      flex: 1;
-      min-width: 300px;
-      padding: 1rem;
-    }
-
-    .produto-info h1 {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      color: #333;
-    }
-
-    .produto-avaliacao {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    .produto-avaliacao .estrelas {
-      color: #FFD700;
-      margin-right: 0.5rem;
-    }
-
-    .produto-preco {
-      font-size: 1.5rem;
-      color: #ff5722;
+    .total {
       font-weight: bold;
-      margin: 1rem 0;
-    }
-
-    .produto-descricao {
-      margin: 1rem 0;
-      line-height: 1.5;
-    }
-
-    .produto-opcoes {
-      margin: 1.5rem 0;
-    }
-
-    .produto-opcoes select {
-      padding: 0.5rem;
-      margin-right: 1rem;
-      border-radius: 4px;
-      border: 1px solid #ddd;
-    }
-
-    .produto-botoes {
-      display: flex;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .produto-botoes button {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 4px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .btn-comprar {
-      background-color: #ff5722;
-      color: white;
-    }
-
-    .btn-carrinho {
-      background-color: #ffd166;
-      color: #333;
-    }
-
-    .btn-favorito {
-      background-color: #333;
-      color: white;
-    }
-
-    /* Miniaturas de imagens */
-    .miniaturas {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-
-    .miniatura {
-      width: 60px;
-      height: 60px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      cursor: pointer;
-      object-fit: cover;
-    }
-
-    .miniatura:hover {
-      border-color: #ff5722;
-    }
-
-    /* Responsividade */
-    @media (max-width: 768px) {
-      .produto-detalhado {
-        flex-direction: column;
-      }
-      
-      .search-bar input {
-        width: 200px;
-      }
-      
-      header {
-        flex-direction: column;
-        gap: 1rem;
-      }
-      
-      nav {
-        margin-top: 1rem;
-      }
-    }
-
-    /* Painel Admin */
-    .admin-container {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: white;
-      z-index: 1000;
-      overflow-y: auto;
-      padding: 1rem;
-    }
-
-    .admin-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid #ddd;
-    }
-
-    .admin-section {
-      margin-bottom: 2rem;
-      padding: 1rem;
-      background: #f9f9f9;
-      border-radius: 8px;
-    }
-
-    .admin-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-
-    .admin-table th, .admin-table td {
-      padding: 0.75rem;
-      border: 1px solid #ddd;
-      text-align: left;
-    }
-
-    .admin-table th {
-      background-color: #f2f2f2;
-    }
-
-    .admin-form input,
-    .admin-form select,
-    .admin-form textarea {
-      width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-
-    .admin-btn {
-      padding: 0.5rem 1rem;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-right: 0.5rem;
-    }
-
-    .btn-primary {
-      background-color: #ff5722;
-    }
-
-    .btn-secondary {
-      background-color: #6c757d;
-    }
-
-    .btn-danger {
-      background-color: #dc3545;
-    }
-
-    .btn-success {
-      background-color: #28a745;
-    }
-
-    .form-row {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .form-group {
-      flex: 1;
-    }
-
-    .admin-panel-btn {
-      background-color: #2c3e50;
-      padding: 0.3rem 0.5rem;
-      border-radius: 4px;
-      display: none;
+      font-size: 1.1rem;
+      border-top: 1px solid #eee;
+      padding-top: 0.5rem;
+      margin-top: 0.5rem;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">Shopee Clone</div>
-    <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="Buscar produtos...">
-      <button onclick="buscarProdutos()">🔍</button>
-    </div>
-    <nav>
-      <a href="#" onclick="mostrarPagina('home')">Início</a>
-      <a href="#" onclick="mostrarPagina('login')" id="login-link">Entrar</a>
-      <a href="#" onclick="mostrarPagina('carrinho')">🛒 Carrinho (<span id="carrinho-count">0</span>)</a>
-      <a href="#" onclick="mostrarPagina('favoritos')">❤️ Favoritos (<span id="favoritos-count">0</span>)</a>
-      <a href="#" onclick="showAdminPanel()" class="admin-panel-btn" id="admin-link">👑 Admin</a>
-    </nav>
-  </header>
+  <!-- [Seu header e outras seções permanecem iguais...] -->
 
-  <!-- Página Inicial -->
-  <main id="home" class="page active">
-    <h1>Produtos em Destaque</h1>
-    <div class="produtos" id="produtos-container">
-      <!-- Produtos serão carregados via JavaScript -->
-    </div>
-  </main>
-
-  <!-- Página de Produto Detalhado -->
-  <main id="produto" class="page">
-    <div class="produto-detalhado" id="produto-container">
-      <!-- Conteúdo será carregado via JavaScript -->
-    </div>
-  </main>
-
-  <!-- Página de Login -->
-  <main id="login" class="page">
-    <div class="login-container">
-      <h1>Login</h1>
-      <form id="loginForm" onsubmit="fazerLogin(event)">
-        <input type="email" id="loginEmail" placeholder="E-mail" required>
-        <input type="password" id="loginSenha" placeholder="Senha" required>
-        <button type="submit">Entrar</button>
-      </form>
-      <p>Não tem conta? <a href="#" onclick="mostrarCadastro()">Cadastre-se</a></p>
-    </div>
-  </main>
-
-  <!-- Página de Cadastro -->
-  <main id="cadastro" class="page">
-    <div class="login-container">
-      <h1>Cadastro</h1>
-      <form id="cadastroForm" onsubmit="fazerCadastro(event)">
-        <input type="text" id="cadastroNome" placeholder="Nome completo" required>
-        <input type="email" id="cadastroEmail" placeholder="E-mail" required>
-        <input type="password" id="cadastroSenha" placeholder="Senha" required>
-        <button type="submit">Cadastrar</button>
-      </form>
-      <p>Já tem conta? <a href="#" onclick="mostrarLogin()">Faça login</a></p>
-    </div>
-  </main>
-
-  <!-- Página de Carrinho -->
+  <!-- Página de Carrinho - Atualizada com cupom -->
   <main id="carrinho" class="page">
     <div class="carrinho-container">
       <h1>Seu Carrinho</h1>
       <div id="carrinho-itens">
-        <!-- Itens serão carregados via JavaScript -->
+        <!-- Itens do carrinho serão carregados aqui -->
       </div>
-      <div id="carrinho-total" style="margin-top: 1rem; font-weight: bold; text-align: right;"></div>
+
+      <!-- Seção de Cupom de Desconto -->
+      <div class="cupom-section">
+        <h3>Cupom de Desconto</h3>
+        <div class="cupom-container">
+          <input type="text" id="cupomInput" placeholder="Digite seu cupom">
+          <button onclick="aplicarCupom()">Aplicar</button>
+        </div>
+        <div id="cupomMessage" class="cupom-message"></div>
+      </div>
+
+      <!-- Resumo do Pedido -->
+      <div class="resumo-pedido">
+        <div class="resumo-linha">
+          <span>Subtotal:</span>
+          <span id="resumo-subtotal">R$ 0,00</span>
+        </div>
+        <div class="resumo-linha">
+          <span>Desconto:</span>
+          <span id="resumo-desconto" class="desconto">R$ 0,00</span>
+        </div>
+        <div class="resumo-linha total">
+          <span>Total:</span>
+          <span id="resumo-total">R$ 0,00</span>
+        </div>
+      </div>
+
       <button style="width: 100%; margin-top: 1rem;" onclick="finalizarCompra()">Finalizar Compra</button>
     </div>
   </main>
 
-  <!-- Página de Favoritos -->
-  <main id="favoritos" class="page">
-    <div class="favoritos-container">
-      <h1>Seus Favoritos</h1>
-      <div id="favoritos-itens" class="produtos">
-        <!-- Itens serão carregados via JavaScript -->
-      </div>
-    </div>
-  </main>
-
-  <!-- Painel Administrativo -->
-  <div id="adminPanel" class="admin-container">
-    <div class="admin-header">
-      <h1>Painel Administrativo</h1>
-      <button onclick="hideAdminPanel()" class="admin-btn btn-secondary">Voltar ao Site</button>
-    </div>
-
-    <div class="admin-section">
-      <h2>Gerenciar Produtos</h2>
-      <button onclick="showProductForm()" class="admin-btn btn-primary">Adicionar Produto</button>
-      
-      <div id="productForm" style="display: none; margin-top: 1rem;">
-        <form id="addProductForm" class="admin-form">
-          <input type="hidden" id="productId">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="productName">Nome do Produto</label>
-              <input type="text" id="productName" placeholder="Nome do Produto" required>
-            </div>
-            <div class="form-group">
-              <label for="productPrice">Preço (R$)</label>
-              <input type="number" step="0.01" id="productPrice" placeholder="Preço" required>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="productStock">Estoque</label>
-              <input type="number" id="productStock" placeholder="Estoque" required>
-            </div>
-            <div class="form-group">
-              <label for="productCategory">Categoria</label>
-              <select id="productCategory" required>
-                <option value="">Selecione...</option>
-                <option value="eletronicos">Eletrônicos</option>
-                <option value="roupas">Roupas</option>
-                <option value="casa">Casa e Cozinha</option>
-                <option value="beleza">Beleza</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="productDescription">Descrição</label>
-            <textarea id="productDescription" placeholder="Descrição do produto" rows="3"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="productImage">URL da Imagem</label>
-            <input type="text" id="productImage" placeholder="https://exemplo.com/imagem.jpg" required>
-          </div>
-          <button type="submit" class="admin-btn btn-primary">Salvar</button>
-          <button type="button" onclick="hideProductForm()" class="admin-btn btn-secondary">Cancelar</button>
-        </form>
-      </div>
-
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Imagem</th>
-            <th>Nome</th>
-            <th>Preço</th>
-            <th>Estoque</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody id="productsTable">
-          <!-- Produtos serão carregados aqui -->
-        </tbody>
-      </table>
-    </div>
-
-    <div class="admin-section">
-      <h2>Pedidos</h2>
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Cliente</th>
-            <th>Data</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody id="ordersTable">
-          <!-- Pedidos serão carregados aqui -->
-        </tbody>
-      </table>
-    </div>
-
-    <div class="admin-section">
-      <h2>Cupons de Desconto</h2>
-      <button onclick="showCouponForm()" class="admin-btn btn-primary">Adicionar Cupom</button>
-      
-      <div id="couponForm" style="display: none; margin-top: 1rem;">
-        <form id="addCouponForm" class="admin-form">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="couponCode">Código</label>
-              <input type="text" id="couponCode" placeholder="Código do cupom" required>
-            </div>
-            <div class="form-group">
-              <label for="couponType">Tipo</label>
-              <select id="couponType" required>
-                <option value="percentage">Percentual</option>
-                <option value="fixed">Valor Fixo</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="couponValue">Valor</label>
-              <input type="number" step="0.01" id="couponValue" placeholder="Valor" required>
-            </div>
-            <div class="form-group">
-              <label for="couponExpiry">Data de Expiração</label>
-              <input type="date" id="couponExpiry" required>
-            </div>
-          </div>
-          <button type="submit" class="admin-btn btn-primary">Salvar</button>
-          <button type="button" onclick="hideCouponForm()" class="admin-btn btn-secondary">Cancelar</button>
-        </form>
-      </div>
-
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Tipo</th>
-            <th>Valor</th>
-            <th>Expiração</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody id="couponsTable">
-          <!-- Cupons serão carregados aqui -->
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <footer>
-    <p>© 2023 Shopee Clone - Versão Simplificada</p>
-  </footer>
+  <!-- [Restante do seu HTML permanece igual...] -->
 
   <script>
-    // Dados iniciais
-    let produtos = JSON.parse(localStorage.getItem('produtos')) || [
-      { 
-        id: 1, 
-        nome: "Smartphone XYZ", 
-        preco: 1999.99, 
-        imagem: "https://via.placeholder.com/500", 
-        imagens: ["https://via.placeholder.com/500"],
-        descricao: "Smartphone premium com tela AMOLED de 6.5 polegadas",
-        estoque: 10,
-        categoria: "eletronicos",
-        vendas: 42,
-        avaliacao: 4.5
-      },
-      { 
-        id: 2, 
-        nome: "Notebook ABC", 
-        preco: 3499.99, 
-        imagem: "https://via.placeholder.com/500", 
-        imagens: ["https://via.placeholder.com/500"],
-        descricao: "Notebook ultraleve com processador i7",
-        estoque: 5,
-        categoria: "eletronicos",
-        vendas: 28,
-        avaliacao: 4.2
-      }
-    ];
+    // [Seus dados e funções existentes permanecem aqui...]
 
-    let pedidos = JSON.parse(localStorage.getItem('pedidos')) || [
-      {
-        id: 1001,
-        cliente: "João Silva",
-        email: "joao@exemplo.com",
-        data: "2023-05-15",
-        itens: [
-          { id: 1, nome: "Smartphone XYZ", preco: 1999.99, quantidade: 1 }
-        ],
-        total: 1999.99,
-        status: "pendente"
-      }
-    ];
+    // Variável para armazenar o cupom aplicado
+    let cupomAplicado = null;
 
-    let cupons = JSON.parse(localStorage.getItem('cupons')) || [
-      {
-        codigo: "DESCONTO10",
-        tipo: "percentage",
-        valor: 10,
-        expiracao: "2023-12-31",
-        usos: 0
-      }
-    ];
-
-    let usuarioLogado = null;
-
-    // Inicialização
-    document.addEventListener('DOMContentLoaded', function() {
-      carregarProdutos();
-      atualizarContadores();
+    // Função para aplicar cupom de desconto
+    function aplicarCupom() {
+      const codigo = document.getElementById('cupomInput').value.trim();
+      const cupomMessage = document.getElementById('cupomMessage');
       
-      const usuarioSalvo = localStorage.getItem('usuarioLogado');
-      if (usuarioSalvo) {
-        usuarioLogado = JSON.parse(usuarioSalvo);
-        document.querySelector('#login-link').textContent = "Minha Conta";
-        
-        // Mostrar botão do admin se for o usuário admin
-        if (usuarioLogado.email === "acdef0612@gmail.com") {
-          document.getElementById('admin-link').style.display = "inline-block";
-        }
-      }
-      
-      // Configurar formulários do admin
-      document.getElementById('addProductForm').addEventListener('submit', salvarProduto);
-      document.getElementById('addCouponForm').addEventListener('submit', salvarCupom);
-    });
-
-    // Funções do site
-    function mostrarPagina(pagina) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(pagina).classList.add('active');
-      
-      if (pagina === 'carrinho') {
-        carregarCarrinho();
-      } else if (pagina === 'favoritos') {
-        carregarFavoritos();
-      } else if (pagina === 'home') {
-        carregarProdutos();
-      }
-    }
-
-    function carregarProdutos() {
-      const container = document.getElementById('produtos-container');
-      container.innerHTML = produtos.map(produto => `
-        <div class="produto-card" onclick="mostrarProduto(${produto.id})">
-          <img src="${produto.imagem}" alt="${produto.nome}">
-          <h3>${produto.nome}</h3>
-          <p>R$ ${produto.preco.toFixed(2)}</p>
-          <div class="produto-avaliacao">
-            <span class="estrelas">${'★'.repeat(Math.round(produto.avaliacao))}${'☆'.repeat(5 - Math.round(produto.avaliacao))}</span>
-            <span>${produto.avaliacao.toFixed(1)}</span>
-          </div>
-          <button onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
-        </div>
-      `).join('');
-    }
-
-    function mostrarProduto(id) {
-      const produto = produtos.find(p => p.id === id);
-      if (!produto) return;
-      
-      const container = document.getElementById('produto-container');
-      container.innerHTML = `
-        <div class="produto-galeria">
-          <img src="${produto.imagem}" alt="${produto.nome}">
-          <div class="miniaturas">
-            ${produto.imagens.map(img => `<img class="miniatura" src="${img}" onclick="trocarImagemPrincipal(this.src)">`).join('')}
-          </div>
-        </div>
-        <div class="produto-info">
-          <h1>${produto.nome}</h1>
-          <div class="produto-avaliacao">
-            <span class="estrelas">${'★'.repeat(Math.round(produto.avaliacao))}${'☆'.repeat(5 - Math.round(produto.avaliacao))}</span>
-            <span>${produto.avaliacao.toFixed(1)} (${produto.vendas} vendas)</span>
-          </div>
-          <div class="produto-preco">R$ ${produto.preco.toFixed(2)}</div>
-          <div class="produto-descricao">
-            <p>${produto.descricao}</p>
-          </div>
-          <div class="produto-opcoes">
-            <select>
-              <option>Selecione uma opção</option>
-              ${produto.variacoes ? produto.variacoes.map(v => `<option>${v}</option>`).join('') : ''}
-            </select>
-          </div>
-          <div class="produto-botoes">
-            <button class="btn-comprar" onclick="adicionarAoCarrinho(${produto.id})">Comprar agora</button>
-            <button class="btn-carrinho" onclick="adicionarAoCarrinho(${produto.id})">Adicionar ao carrinho</button>
-          </div>
-        </div>
-      `;
-      mostrarPagina('produto');
-    }
-
-    function trocarImagemPrincipal(src) {
-      const mainImg = document.querySelector('.produto-galeria > img');
-      if (mainImg) mainImg.src = src;
-    }
-
-    function adicionarAoCarrinho(id) {
-      if (!usuarioLogado) {
-        alert("Por favor, faça login para adicionar itens ao carrinho.");
-        mostrarPagina('login');
+      if (!codigo) {
+        cupomMessage.innerHTML = '<span class="cupom-error">Por favor, digite um código de cupom</span>';
         return;
       }
       
-      const produto = produtos.find(p => p.id === id);
-      let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-      carrinho.push(produto);
-      localStorage.setItem('carrinho', JSON.stringify(carrinho));
-      atualizarContadores();
-      alert(`${produto.nome} adicionado ao carrinho!`);
+      // Verificar se o cupom existe (usando os cupons do painel admin)
+      const cupomValido = cupons.find(c => c.codigo === codigo);
+      
+      if (!cupomValido) {
+        cupomMessage.innerHTML = '<span class="cupom-error">Cupom inválido</span>';
+        cupomAplicado = null;
+      } else {
+        // Verificar se o cupom está expirado
+        const hoje = new Date();
+        const expiracao = new Date(cupomValido.expiracao);
+        
+        if (expiracao < hoje) {
+          cupomMessage.innerHTML = '<span class="cupom-error">Cupom expirado</span>';
+          cupomAplicado = null;
+        } else {
+          cupomAplicado = cupomValido;
+          const valorDesconto = cupomValido.tipo === 'percentage' ? 
+            `${cupomValido.valor}%` : `R$ ${cupomValido.valor.toFixed(2)}`;
+          cupomMessage.innerHTML = `<span class="cupom-success">Cupom aplicado! (${valorDesconto} de desconto)</span>`;
+        }
+      }
+      
+      // Atualizar o carrinho para recalcular totais
+      carregarCarrinho();
     }
 
+    // Atualizar a função carregarCarrinho para incluir descontos
     function carregarCarrinho() {
       const container = document.getElementById('carrinho-itens');
-      const totalContainer = document.getElementById('carrinho-total');
       const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
       
       container.innerHTML = '';
       
       if (carrinho.length === 0) {
         container.innerHTML = "<p>Seu carrinho está vazio.</p>";
-        totalContainer.textContent = '';
+        document.getElementById('resumo-subtotal').textContent = "R$ 0,00";
+        document.getElementById('resumo-desconto').textContent = "R$ 0,00";
+        document.getElementById('resumo-total').textContent = "R$ 0,00";
         return;
       }
       
-      let total = 0;
+      let subtotal = 0;
       carrinho.forEach((item, index) => {
-        total += item.preco;
+        subtotal += item.preco;
         container.innerHTML += `
           <div class="produto-card">
             <img src="${item.imagem}" alt="${item.nome}" style="width: 80px; height: 80px;">
@@ -830,17 +192,25 @@
         `;
       });
       
-      totalContainer.textContent = `Total: R$ ${total.toFixed(2)}`;
+      // Calcular desconto
+      let desconto = 0;
+      if (cupomAplicado) {
+        if (cupomAplicado.tipo === 'percentage') {
+          desconto = subtotal * (cupomAplicado.valor / 100);
+        } else {
+          desconto = cupomAplicado.valor;
+        }
+        // Garantir que o desconto não seja maior que o subtotal
+        desconto = Math.min(desconto, subtotal);
+      }
+      
+      // Atualizar resumo
+      document.getElementById('resumo-subtotal').textContent = `R$ ${subtotal.toFixed(2)}`;
+      document.getElementById('resumo-desconto').textContent = `- R$ ${desconto.toFixed(2)}`;
+      document.getElementById('resumo-total').textContent = `R$ ${(subtotal - desconto).toFixed(2)}`;
     }
 
-    function removerDoCarrinho(index) {
-      const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-      carrinho.splice(index, 1);
-      localStorage.setItem('carrinho', JSON.stringify(carrinho));
-      carregarCarrinho();
-      atualizarContadores();
-    }
-
+    // Atualizar a função finalizarCompra para considerar o cupom
     function finalizarCompra() {
       const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
       if (carrinho.length === 0) {
@@ -848,7 +218,29 @@
         return;
       }
       
-      // Criar novo pedido
+      // Calcular totais
+      const subtotal = carrinho.reduce((sum, item) => sum + item.preco, 0);
+      let desconto = 0;
+      
+      if (cupomAplicado) {
+        if (cupomAplicado.tipo === 'percentage') {
+          desconto = subtotal * (cupomAplicado.valor / 100);
+        } else {
+          desconto = cupomAplicado.valor;
+        }
+        desconto = Math.min(desconto, subtotal);
+        
+        // Atualizar contador de usos do cupom
+        const cupomIndex = cupons.findIndex(c => c.codigo === cupomAplicado.codigo);
+        if (cupomIndex !== -1) {
+          cupons[cupomIndex].usos += 1;
+          localStorage.setItem('cupons', JSON.stringify(cupons));
+        }
+      }
+      
+      const total = subtotal - desconto;
+      
+      // Criar pedido
       const novoPedido = {
         id: pedidos.length > 0 ? Math.max(...pedidos.map(p => p.id)) + 1 : 1001,
         cliente: usuarioLogado.nome,
@@ -860,375 +252,31 @@
           preco: item.preco,
           quantidade: 1
         })),
-        total: carrinho.reduce((sum, item) => sum + item.preco, 0),
+        subtotal: subtotal,
+        desconto: desconto,
+        total: total,
+        cupom: cupomAplicado ? cupomAplicado.codigo : null,
         status: "pendente"
       };
       
       pedidos.push(novoPedido);
       localStorage.setItem('pedidos', JSON.stringify(pedidos));
       
-      // Limpar carrinho
+      // Limpar carrinho e cupom
       localStorage.removeItem('carrinho');
+      cupomAplicado = null;
+      document.getElementById('cupomInput').value = '';
+      document.getElementById('cupomMessage').innerHTML = '';
+      
+      // Atualizar exibição
       carregarCarrinho();
       atualizarContadores();
       
-      alert("Pedido realizado com sucesso! Obrigado por sua compra.");
+      alert(`Pedido #${novoPedido.id} realizado com sucesso!\nTotal: R$ ${total.toFixed(2)}`);
       mostrarPagina('home');
     }
 
-    function carregarFavoritos() {
-      const container = document.getElementById('favoritos-itens');
-      const favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
-      
-      container.innerHTML = '';
-      
-      if (favoritos.length === 0) {
-        container.innerHTML = "<p>Você não tem produtos favoritados.</p>";
-        return;
-      }
-      
-      container.innerHTML = favoritos.map(id => {
-        const produto = produtos.find(p => p.id === id);
-        if (!produto) return '';
-        return `
-          <div class="produto-card" onclick="mostrarProduto(${produto.id})">
-            <img src="${produto.imagem}" alt="${produto.nome}">
-            <h3>${produto.nome}</h3>
-            <p>R$ ${produto.preco.toFixed(2)}</p>
-            <button onclick="event.stopPropagation(); removerDosFavoritos(${produto.id})">❌ Remover</button>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function adicionarAosFavoritos(id) {
-      let favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
-      if (!favoritos.includes(id)) {
-        favoritos.push(id);
-        localStorage.setItem('favoritos', JSON.stringify(favoritos));
-        atualizarContadores();
-        alert("Produto adicionado aos favoritos!");
-      }
-    }
-
-    function removerDosFavoritos(id) {
-      let favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
-      favoritos = favoritos.filter(favId => favId !== id);
-      localStorage.setItem('favoritos', JSON.stringify(favoritos));
-      carregarFavoritos();
-      atualizarContadores();
-    }
-
-    function atualizarContadores() {
-      const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-      const favoritos = JSON.parse(localStorage.getItem('favoritos')) || [];
-      
-      document.getElementById('carrinho-count').textContent = carrinho.length;
-      document.getElementById('favoritos-count').textContent = favoritos.length;
-    }
-
-    function fazerLogin(event) {
-      event.preventDefault();
-      const email = document.getElementById('loginEmail').value;
-      const senha = document.getElementById('loginSenha').value;
-      
-      // Verificar credenciais do admin
-      if (email === "acdef0612@gmail.com" && senha === "mamutipa08") {
-        usuarioLogado = {
-          nome: "Administrador",
-          email: email,
-          isAdmin: true
-        };
-        
-        localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
-        document.querySelector('#login-link').textContent = "Minha Conta";
-        document.getElementById('admin-link').style.display = "inline-block";
-        mostrarPagina('home');
-        alert("Bem-vindo, Administrador!");
-        return;
-      }
-      
-      // Login normal (simulado)
-      usuarioLogado = {
-        nome: email.split('@')[0],
-        email: email,
-        isAdmin: false
-      };
-      
-      localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
-      document.querySelector('#login-link').textContent = "Minha Conta";
-      mostrarPagina('home');
-      alert(`Bem-vindo, ${usuarioLogado.nome}!`);
-    }
-
-    function fazerCadastro(event) {
-      event.preventDefault();
-      const nome = document.getElementById('cadastroNome').value;
-      const email = document.getElementById('cadastroEmail').value;
-      const senha = document.getElementById('cadastroSenha').value;
-      
-      usuarioLogado = {
-        nome: nome,
-        email: email,
-        isAdmin: false
-      };
-      
-      localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
-      document.querySelector('#login-link').textContent = "Minha Conta";
-      mostrarPagina('home');
-      alert(`Cadastro realizado com sucesso, ${nome}!`);
-    }
-
-    function mostrarLogin() {
-      mostrarPagina('login');
-    }
-
-    function mostrarCadastro() {
-      mostrarPagina('cadastro');
-    }
-
-    function buscarProdutos() {
-      const termo = document.getElementById('searchInput').value.toLowerCase();
-      const container = document.getElementById('produtos-container');
-      
-      const resultados = produtos.filter(produto => 
-        produto.nome.toLowerCase().includes(termo) || 
-        produto.descricao.toLowerCase().includes(termo)
-      );
-      
-      if (resultados.length === 0) {
-        container.innerHTML = '<p>Nenhum produto encontrado.</p>';
-        return;
-      }
-      
-      container.innerHTML = resultados.map(produto => `
-        <div class="produto-card" onclick="mostrarProduto(${produto.id})">
-          <img src="${produto.imagem}" alt="${produto.nome}">
-          <h3>${produto.nome}</h3>
-          <p>R$ ${produto.preco.toFixed(2)}</p>
-          <button onclick="event.stopPropagation(); adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
-        </div>
-      `).join('');
-    }
-
-    // Funções do Painel Admin
-    function showAdminPanel() {
-      if (usuarioLogado && usuarioLogado.email === "acdef0612@gmail.com") {
-        document.getElementById('adminPanel').style.display = 'block';
-        carregarDadosAdmin();
-      } else {
-        alert("Acesso negado. Somente administradores podem acessar este painel.");
-      }
-    }
-
-    function hideAdminPanel() {
-      document.getElementById('adminPanel').style.display = 'none';
-    }
-
-    function carregarDadosAdmin() {
-      // Carregar produtos
-      const productsTable = document.getElementById('productsTable');
-      productsTable.innerHTML = produtos.map(produto => `
-        <tr>
-          <td>${produto.id}</td>
-          <td><img src="${produto.imagem}" alt="${produto.nome}" style="width: 50px; height: 50px;"></td>
-          <td>${produto.nome}</td>
-          <td>R$ ${produto.preco.toFixed(2)}</td>
-          <td>${produto.estoque}</td>
-          <td>
-            <button onclick="editarProduto(${produto.id})" class="admin-btn btn-primary">Editar</button>
-            <button onclick="excluirProduto(${produto.id})" class="admin-btn btn-danger">Excluir</button>
-          </td>
-        </tr>
-      `).join('');
-      
-      // Carregar pedidos
-      const ordersTable = document.getElementById('ordersTable');
-      ordersTable.innerHTML = pedidos.map(pedido => `
-        <tr>
-          <td>${pedido.id}</td>
-          <td>${pedido.cliente}</td>
-          <td>${pedido.data}</td>
-          <td>R$ ${pedido.total.toFixed(2)}</td>
-          <td>${pedido.status}</td>
-          <td>
-            <button onclick="editarPedido(${pedido.id})" class="admin-btn btn-primary">Editar</button>
-          </td>
-        </tr>
-      `).join('');
-      
-      // Carregar cupons
-      const couponsTable = document.getElementById('couponsTable');
-      couponsTable.innerHTML = cupons.map(cupom => `
-        <tr>
-          <td>${cupom.codigo}</td>
-          <td>${cupom.tipo === 'percentage' ? 'Percentual' : 'Valor Fixo'}</td>
-          <td>${cupom.tipo === 'percentage' ? cupom.valor + '%' : 'R$ ' + cupom.valor.toFixed(2)}</td>
-          <td>${cupom.expiracao}</td>
-          <td>
-            <button onclick="editarCupom('${cupom.codigo}')" class="admin-btn btn-primary">Editar</button>
-            <button onclick="excluirCupom('${cupom.codigo}')" class="admin-btn btn-danger">Excluir</button>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function showProductForm() {
-      document.getElementById('productForm').style.display = 'block';
-      document.getElementById('productId').value = '';
-      document.getElementById('addProductForm').reset();
-    }
-
-    function hideProductForm() {
-      document.getElementById('productForm').style.display = 'none';
-    }
-
-    function salvarProduto(event) {
-      event.preventDefault();
-      
-      const id = document.getElementById('productId').value;
-      const nome = document.getElementById('productName').value;
-      const preco = parseFloat(document.getElementById('productPrice').value);
-      const estoque = parseInt(document.getElementById('productStock').value);
-      const categoria = document.getElementById('productCategory').value;
-      const descricao = document.getElementById('productDescription').value;
-      const imagem = document.getElementById('productImage').value;
-      
-      if (id) {
-        // Editar produto existente
-        const index = produtos.findIndex(p => p.id == id);
-        produtos[index] = {
-          ...produtos[index],
-          nome,
-          preco,
-          estoque,
-          categoria,
-          descricao,
-          imagem
-        };
-      } else {
-        // Adicionar novo produto
-        const novoId = produtos.length > 0 ? Math.max(...produtos.map(p => p.id)) + 1 : 1;
-        produtos.push({
-          id: novoId,
-          nome,
-          preco,
-          estoque,
-          categoria,
-          descricao,
-          imagem,
-          imagens: [imagem],
-          vendas: 0,
-          avaliacao: 0
-        });
-      }
-      
-      localStorage.setItem('produtos', JSON.stringify(produtos));
-      carregarDadosAdmin();
-      carregarProdutos();
-      hideProductForm();
-      alert("Produto salvo com sucesso!");
-    }
-
-    function editarProduto(id) {
-      const produto = produtos.find(p => p.id == id);
-      if (!produto) return;
-      
-      document.getElementById('productId').value = produto.id;
-      document.getElementById('productName').value = produto.nome;
-      document.getElementById('productPrice').value = produto.preco;
-      document.getElementById('productStock').value = produto.estoque;
-      document.getElementById('productCategory').value = produto.categoria || '';
-      document.getElementById('productDescription').value = produto.descricao || '';
-      document.getElementById('productImage').value = produto.imagem;
-      
-      document.getElementById('productForm').style.display = 'block';
-    }
-
-    function excluirProduto(id) {
-      if (confirm("Tem certeza que deseja excluir este produto?")) {
-        produtos = produtos.filter(p => p.id != id);
-        localStorage.setItem('produtos', JSON.stringify(produtos));
-        carregarDadosAdmin();
-        carregarProdutos();
-        alert("Produto excluído com sucesso!");
-      }
-    }
-
-    function showCouponForm() {
-      document.getElementById('couponForm').style.display = 'block';
-      document.getElementById('addCouponForm').reset();
-    }
-
-    function hideCouponForm() {
-      document.getElementById('couponForm').style.display = 'none';
-    }
-
-    function salvarCupom(event) {
-      event.preventDefault();
-      
-      const codigo = document.getElementById('couponCode').value;
-      const tipo = document.getElementById('couponType').value;
-      const valor = parseFloat(document.getElementById('couponValue').value);
-      const expiracao = document.getElementById('couponExpiry').value;
-      
-      // Verificar se já existe
-      const index = cupons.findIndex(c => c.codigo === codigo);
-      
-      if (index >= 0) {
-        // Atualizar cupom existente
-        cupons[index] = {
-          codigo,
-          tipo,
-          valor,
-          expiracao,
-          usos: cupons[index].usos
-        };
-      } else {
-        // Adicionar novo cupom
-        cupons.push({
-          codigo,
-          tipo,
-          valor,
-          expiracao,
-          usos: 0
-        });
-      }
-      
-      localStorage.setItem('cupons', JSON.stringify(cupons));
-      carregarDadosAdmin();
-      hideCouponForm();
-      alert("Cupom salvo com sucesso!");
-    }
-
-    function editarCupom(codigo) {
-      const cupom = cupons.find(c => c.codigo === codigo);
-      if (!cupom) return;
-      
-      document.getElementById('couponCode').value = cupom.codigo;
-      document.getElementById('couponType').value = cupom.tipo;
-      document.getElementById('couponValue').value = cupom.valor;
-      document.getElementById('couponExpiry').value = cupom.expiracao;
-      
-      document.getElementById('couponForm').style.display = 'block';
-    }
-
-    function excluirCupom(codigo) {
-      if (confirm("Tem certeza que deseja excluir este cupom?")) {
-        cupons = cupons.filter(c => c.codigo !== codigo);
-        localStorage.setItem('cupons', JSON.stringify(cupons));
-        carregarDadosAdmin();
-        alert("Cupom excluído com sucesso!");
-      }
-    }
-
-    function editarPedido(id) {
-      const pedido = pedidos.find(p => p.id == id);
-      if (!pedido) return;
-      
-      alert(`Editando pedido #${pedido.id}\nCliente: ${pedido.cliente}\nTotal: R$ ${pedido.total.toFixed(2)}`);
-      // Implemente a lógica de edição conforme necessário
-    }
+    // [Restante do seu JavaScript permanece igual...]
   </script>
 </body>
 </html>

@@ -1,170 +1,518 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Segredos do Mercado Digital - E-book Exclusivo</title>
-    <meta name="description" content="Descubra os segredos que os grandes empreendedores não querem que você saiba! E-book com métodos comprovados para ganhar dinheiro online.">
-    <style>
-        /* Estilos CSS */
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            color: #333;
-            line-height: 1.6;
-        }
-        .header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        .hero {
-            background: linear-gradient(135deg, #3498db, #2c3e50);
-            color: white;
-            padding: 60px 0;
-            text-align: center;
-        }
-        .cta-button {
-            display: inline-block;
-            background-color: #e74c3c;
-            color: white;
-            padding: 15px 30px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            margin: 20px 0;
-            transition: background-color 0.3s;
-        }
-        .cta-button:hover {
-            background-color: #c0392b;
-        }
-        .benefits {
-            padding: 60px 0;
-            background-color: #f9f9f9;
-        }
-        .benefit-item {
-            margin-bottom: 30px;
-        }
-        .testimonials {
-            padding: 60px 0;
-            background-color: #ecf0f1;
-        }
-        .guarantee {
-            padding: 40px 0;
-            background-color: #2ecc71;
-            color: white;
-            text-align: center;
-        }
-        .footer {
-            background-color: #2c3e50;
-            color: white;
-            padding: 30px 0;
-            text-align: center;
-        }
-        .ebook-cover {
-            max-width: 300px;
-            margin: 0 auto;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopee Clone</title>
+  <style>
+    /* Reset básico */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+    }
+
+    header {
+      background-color: #ff5722;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+
+    .search-bar {
+      display: flex;
+      margin: 0.5rem 0;
+    }
+
+    .search-bar input {
+      padding: 0.5rem;
+      border: none;
+      border-radius: 4px 0 0 4px;
+      width: 300px;
+    }
+
+    .search-bar button {
+      padding: 0.5rem;
+      border: none;
+      background: #333;
+      color: white;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+    }
+
+    nav a {
+      color: white;
+      margin-left: 1rem;
+      text-decoration: none;
+    }
+
+    main {
+      padding: 1rem;
+      min-height: 80vh;
+    }
+
+    .produtos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 1rem 0;
+    }
+
+    .produto-card {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.2s;
+    }
+
+    .produto-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .produto-card img {
+      max-width: 100%;
+      height: 150px;
+      object-fit: contain;
+    }
+
+    .produto-card h3 {
+      margin: 0.5rem 0;
+      font-size: 1rem;
+    }
+
+    .produto-card p {
+      color: #ff5722;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .produto-card button {
+      background: #ff5722;
+      color: white;
+      border: none;
+      padding: 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 0.25rem;
+      width: 100%;
+    }
+
+    .produto-card button.favorito {
+      background: #333;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #333;
+      color: white;
+      margin-top: 2rem;
+    }
+
+    /* Páginas específicas */
+    .login-container, .carrinho-container, .favoritos-container {
+      max-width: 500px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-container h1, .carrinho-container h1, .favoritos-container h1 {
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .login-container input {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .login-container button {
+      width: 100%;
+      padding: 0.75rem;
+      background: #ff5722;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .login-container p {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .login-container a {
+      color: #ff5722;
+      text-decoration: none;
+    }
+
+    /* Esconder seções não ativas */
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+  </style>
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <h1>Segredos do Mercado Digital</h1>
-        </div>
-    </header>
+  <header>
+    <div class="logo">Shopee Clone</div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Buscar produtos...">
+      <button onclick="buscarProdutos()">🔍</button>
+    </div>
+    <nav>
+      <a href="#" onclick="mostrarPagina('home')">Início</a>
+      <a href="#" onclick="mostrarPagina('login')">Entrar</a>
+      <a href="#" onclick="mostrarPagina('carrinho')">🛒 Carrinho (<span id="carrinho-count">0</span>)</a>
+      <a href="#" onclick="mostrarPagina('favoritos')">❤️ Favoritos (<span id="favoritos-count">0</span>)</a>
+    </nav>
+  </header>
 
-    <section class="hero">
-        <div class="container">
-            <h2>Descubra os Métodos que os Grandes Empreendedores Escondem de Você!</h2>
-            <p>Adquira agora o e-book que vai revolucionar sua forma de ganhar dinheiro online</p>
-            
-            <img src="capa-ebook.png" alt="Capa do E-book Segredos do Mercado Digital" class="ebook-cover">
-            
-            <a href="#comprar" class="cta-button">QUERO COMPRAR AGORA!</a>
-            
-            <p>De <s>R$ 97,00</s> por apenas R$ 47,00 ou 3x de R$ 15,67</p>
-        </div>
-    </section>
+  <!-- Página Inicial -->
+  <main id="home" class="page active">
+    <h1>Produtos em Destaque</h1>
+    <div class="produtos" id="produtos-container">
+      <!-- Produtos serão carregados via JavaScript -->
+    </div>
+  </main>
 
-    <section class="benefits">
-        <div class="container">
-            <h2>O que você vai aprender com este e-book:</h2>
-            
-            <div class="benefit-item">
-                <h3>✔ Fornecedores Exclusivos</h3>
-                <p>Lista com os melhores fornecedores nacionais e internacionais que os grandes vendedores usam.</p>
-            </div>
-            
-            <div class="benefit-item">
-                <h3>✔ Estratégias de Vendas</h3>
-                <p>Métodos comprovados para aumentar suas vendas em até 300%.</p>
-            </div>
-            
-            <div class="benefit-item">
-                <h3>✔ Fórmula Secreta</h3>
-                <p>O passo a passo exato que usamos para faturar mais de R$ 50.000/mês.</p>
-            </div>
-            
-            <div class="benefit-item">
-                <h3>✔ Bônus Exclusivos</h3>
-                <p>Acesso a materiais bônus que vão acelerar seus resultados.</p>
-            </div>
-        </div>
-    </section>
+  <!-- Página de Login -->
+  <main id="login" class="page">
+    <div class="login-container">
+      <h1>Login</h1>
+      <form id="loginForm" onsubmit="fazerLogin(event)">
+        <input type="email" id="loginEmail" placeholder="E-mail" required>
+        <input type="password" id="loginSenha" placeholder="Senha" required>
+        <button type="submit">Entrar</button>
+      </form>
+      <p>Não tem conta? <a href="#" onclick="mostrarCadastro()">Cadastre-se</a></p>
+    </div>
+  </main>
 
-    <section class="testimonials">
-        <div class="container">
-            <h2>O que estão dizendo sobre o e-book:</h2>
-            
-            <div class="testimonial-item">
-                <p>"Comprei o e-book semana passada e já fechei 3 vendas usando os fornecedores indicados!"</p>
-                <p><strong>- Carlos S., São Paulo</strong></p>
-            </div>
-            
-            <div class="testimonial-item">
-                <p>"Nunca imaginei que poderia ganhar dinheiro assim. Valeu cada centavo!"</p>
-                <p><strong>- Ana L., Rio de Janeiro</strong></p>
-            </div>
-        </div>
-    </section>
+  <!-- Página de Cadastro -->
+  <main id="cadastro" class="page">
+    <div class="login-container">
+      <h1>Cadastro</h1>
+      <form id="cadastroForm" onsubmit="fazerCadastro(event)">
+        <input type="text" id="cadastroNome" placeholder="Nome completo" required>
+        <input type="email" id="cadastroEmail" placeholder="E-mail" required>
+        <input type="password" id="cadastroSenha" placeholder="Senha" required>
+        <button type="submit">Cadastrar</button>
+      </form>
+      <p>Já tem conta? <a href="#" onclick="mostrarLogin()">Faça login</a></p>
+    </div>
+  </main>
 
-    <section class="guarantee">
-        <div class="container">
-            <h2>Garantia Incondicional de 7 Dias</h2>
-            <p>Se você não gostar do conteúdo por qualquer motivo, devolvemos 100% do seu dinheiro sem questionamentos.</p>
-        </div>
-    </section>
+  <!-- Página de Carrinho -->
+  <main id="carrinho" class="page">
+    <div class="carrinho-container">
+      <h1>Seu Carrinho</h1>
+      <div id="carrinho-itens">
+        <!-- Itens serão carregados via JavaScript -->
+      </div>
+      <div id="carrinho-total" style="margin-top: 1rem; font-weight: bold; text-align: right;"></div>
+      <button style="width: 100%; margin-top: 1rem;" onclick="finalizarCompra()">Finalizar Compra</button>
+    </div>
+  </main>
 
-    <section id="comprar" class="purchase">
-        <div class="container">
-            <h2>Adquira Agora Mesmo Seu E-book</h2>
-            
-            <div class="pricing">
-                <p>De <s>R$ 97,00</s> por apenas:</p>
-                <h3>R$ 47,00</h3>
-                <p>ou 3x de R$ 15,67 no cartão</p>
-                
-                <a href="https://pay.kiwify.com.br/SEUCODIGO" class="cta-button">COMPRAR AGORA</a>
-                
-                <p><small>Pagamento seguro via Kiwify</small></p>
-            </div>
-        </div>
-    </section>
+  <!-- Página de Favoritos -->
+  <main id="favoritos" class="page">
+    <div class="favoritos-container">
+      <h1>Seus Favoritos</h1>
+      <div id="favoritos-itens" class="produtos">
+        <!-- Itens serão carregados via JavaScript -->
+      </div>
+    </div>
+  </main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>© 2023 Segredos do Mercado Digital - Todos os direitos reservados</p>
-            <p><a href="termos.html" style="color: white;">Termos de Uso</a> | <a href="privacidade.html" style="color: white;">Política de Privacidade</a></p>
-        </div>
-    </footer>
+  <footer>
+    <p>© 2023 Shopee Clone - Versão Simplificada</p>
+  </footer>
+
+  <script>
+    // Dados fictícios de produtos
+    const produtos = [
+      { id: 1, nome: "Smartphone XYZ", preco: 1999.99, imagem: "https://via.placeholder.com/150" },
+      { id: 2, nome: "Notebook ABC", preco: 3499.99, imagem: "https://via.placeholder.com/150" },
+      { id: 3, nome: "Fone de Ouvido", preco: 199.99, imagem: "https://via.placeholder.com/150" },
+      { id: 4, nome: "Smartwatch", preco: 599.99, imagem: "https://via.placeholder.com/150" },
+      { id: 5, nome: "Tablet", preco: 1299.99, imagem: "https://via.placeholder.com/150" },
+      { id: 6, nome: "Câmera Digital", preco: 899.99, imagem: "https://via.placeholder.com/150" },
+    ];
+
+    // Usuário logado
+    let usuarioLogado = null;
+
+    // Inicialização
+    document.addEventListener("DOMContentLoaded", () => {
+      carregarProdutos();
+      atualizarContadores();
+      
+      // Verificar se há usuário logado
+      const usuarioSalvo = localStorage.getItem("usuarioLogado");
+      if (usuarioSalvo) {
+        usuarioLogado = JSON.parse(usuarioSalvo);
+        document.querySelector('a[onclick="mostrarPagina(\'login\')"]').textContent = "Minha Conta";
+      }
+    });
+
+    // Função para mostrar páginas
+    function mostrarPagina(pagina) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(pagina).classList.add('active');
+      
+      if (pagina === 'carrinho') {
+        carregarCarrinho();
+      } else if (pagina === 'favoritos') {
+        carregarFavoritos();
+      }
+    }
+
+    function mostrarLogin() {
+      mostrarPagina('login');
+    }
+
+    function mostrarCadastro() {
+      mostrarPagina('cadastro');
+    }
+
+    // Funções de produto
+    function carregarProdutos() {
+      const container = document.getElementById("produtos-container");
+      container.innerHTML = '';
+      
+      produtos.forEach(produto => {
+        const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+        const isFavorito = favoritos.some(f => f.id === produto.id);
+        
+        container.innerHTML += `
+          <div class="produto-card">
+            <img src="${produto.imagem}" alt="${produto.nome}">
+            <h3>${produto.nome}</h3>
+            <p>R$ ${produto.preco.toFixed(2)}</p>
+            <button onclick="adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
+            <button class="${isFavorito ? 'favorito' : ''}" onclick="toggleFavorito(${produto.id})">
+              ${isFavorito ? '❤️ Remover' : '❤️ Favoritar'}
+            </button>
+          </div>
+        `;
+      });
+    }
+
+    function buscarProdutos() {
+      const termo = document.getElementById("searchInput").value.toLowerCase();
+      const container = document.getElementById("produtos-container");
+      container.innerHTML = '';
+      
+      const produtosFiltrados = produtos.filter(produto => 
+        produto.nome.toLowerCase().includes(termo)
+      );
+      
+      if (produtosFiltrados.length === 0) {
+        container.innerHTML = '<p>Nenhum produto encontrado.</p>';
+        return;
+      }
+      
+      produtosFiltrados.forEach(produto => {
+        const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+        const isFavorito = favoritos.some(f => f.id === produto.id);
+        
+        container.innerHTML += `
+          <div class="produto-card">
+            <img src="${produto.imagem}" alt="${produto.nome}">
+            <h3>${produto.nome}</h3>
+            <p>R$ ${produto.preco.toFixed(2)}</p>
+            <button onclick="adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
+            <button class="${isFavorito ? 'favorito' : ''}" onclick="toggleFavorito(${produto.id})">
+              ${isFavorito ? '❤️ Remover' : '❤️ Favoritar'}
+            </button>
+          </div>
+        `;
+      });
+    }
+
+    // Funções de carrinho
+    function adicionarAoCarrinho(id) {
+      if (!usuarioLogado) {
+        alert("Por favor, faça login para adicionar itens ao carrinho.");
+        mostrarPagina('login');
+        return;
+      }
+      
+      const produto = produtos.find(p => p.id === id);
+      let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+      carrinho.push(produto);
+      localStorage.setItem("carrinho", JSON.stringify(carrinho));
+      atualizarContadores();
+      alert(`${produto.nome} adicionado ao carrinho!`);
+    }
+
+    function carregarCarrinho() {
+      const container = document.getElementById("carrinho-itens");
+      const totalContainer = document.getElementById("carrinho-total");
+      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+      
+      container.innerHTML = '';
+      
+      if (carrinho.length === 0) {
+        container.innerHTML = "<p>Seu carrinho está vazio.</p>";
+        totalContainer.textContent = '';
+        return;
+      }
+      
+      let total = 0;
+      carrinho.forEach((item, index) => {
+        total += item.preco;
+        container.innerHTML += `
+          <div class="produto-card">
+            <h3>${item.nome}</h3>
+            <p>R$ ${item.preco.toFixed(2)}</p>
+            <button onclick="removerDoCarrinho(${index})">Remover</button>
+          </div>
+        `;
+      });
+      
+      totalContainer.textContent = `Total: R$ ${total.toFixed(2)}`;
+    }
+
+    function removerDoCarrinho(index) {
+      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+      carrinho.splice(index, 1);
+      localStorage.setItem("carrinho", JSON.stringify(carrinho));
+      carregarCarrinho();
+      atualizarContadores();
+    }
+
+    function finalizarCompra() {
+      if (confirm("Deseja finalizar sua compra?")) {
+        localStorage.removeItem("carrinho");
+        carregarCarrinho();
+        atualizarContadores();
+        alert("Compra finalizada com sucesso! Obrigado.");
+        mostrarPagina('home');
+      }
+    }
+
+    // Funções de favoritos
+    function toggleFavorito(id) {
+      if (!usuarioLogado) {
+        alert("Por favor, faça login para favoritar produtos.");
+        mostrarPagina('login');
+        return;
+      }
+      
+      const produto = produtos.find(p => p.id === id);
+      let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+      
+      const index = favoritos.findIndex(f => f.id === id);
+      if (index >= 0) {
+        favoritos.splice(index, 1);
+        alert(`${produto.nome} removido dos favoritos!`);
+      } else {
+        favoritos.push(produto);
+        alert(`${produto.nome} adicionado aos favoritos!`);
+      }
+      
+      localStorage.setItem("favoritos", JSON.stringify(favoritos));
+      carregarProdutos();
+      carregarFavoritos();
+      atualizarContadores();
+    }
+
+    function carregarFavoritos() {
+      const container = document.getElementById("favoritos-itens");
+      const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+      
+      container.innerHTML = '';
+      
+      if (favoritos.length === 0) {
+        container.innerHTML = "<p>Você não tem produtos favoritados.</p>";
+        return;
+      }
+      
+      favoritos.forEach(produto => {
+        container.innerHTML += `
+          <div class="produto-card">
+            <img src="${produto.imagem}" alt="${produto.nome}">
+            <h3>${produto.nome}</h3>
+            <p>R$ ${produto.preco.toFixed(2)}</p>
+            <button onclick="adicionarAoCarrinho(${produto.id})">🛒 Comprar</button>
+            <button class="favorito" onclick="toggleFavorito(${produto.id})">❤️ Remover</button>
+          </div>
+        `;
+      });
+    }
+
+    // Funções de autenticação
+    function fazerLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const senha = document.getElementById("loginSenha").value;
+      
+      // Simulação de login (em um sistema real, isso viria de um backend)
+      usuarioLogado = {
+        email,
+        nome: email.split('@')[0]
+      };
+      
+      localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+      alert(`Bem-vindo, ${usuarioLogado.nome}!`);
+      document.querySelector('a[onclick="mostrarPagina(\'login\')"]').textContent = "Minha Conta";
+      mostrarPagina('home');
+    }
+
+    function fazerCadastro(event) {
+      event.preventDefault();
+      const nome = document.getElementById("cadastroNome").value;
+      const email = document.getElementById("cadastroEmail").value;
+      const senha = document.getElementById("cadastroSenha").value;
+      
+      // Simulação de cadastro
+      usuarioLogado = {
+        email,
+        nome
+      };
+      
+      localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+      alert(`Cadastro realizado com sucesso, ${nome}!`);
+      document.querySelector('a[onclick="mostrarPagina(\'login\')"]').textContent = "Minha Conta";
+      mostrarPagina('home');
+    }
+
+    // Atualizar contadores
+    function atualizarContadores() {
+      const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+      const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+      
+      document.getElementById("carrinho-count").textContent = carrinho.length;
+      document.getElementById("favoritos-count").textContent = favoritos.length;
+    }
+  </script>
 </body>
 </html>
